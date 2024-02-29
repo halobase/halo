@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build src/index.ts --minify --target=bun --outfile=build/server.js",
+    "deploy": "wrangler deploy --minify src/index.ts"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^0.9.6",
+    "cos-nodejs-sdk-v5": "^2.13.1",
+    "hono": "^3.12.8",
+    "jose": "^5.2.0",
+    "openai": "^4.26.0",
+    "openapi3-ts": "^4.2.1",
+    "yaml": "^2.3.4",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

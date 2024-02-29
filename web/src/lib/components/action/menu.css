@@ -1,0 +1,110 @@
+@layer components {
+  .menu h3 {
+    @apply flex items-center justify-between;
+    @apply px-2 py-2;
+    @apply font-medium capitalize;
+    @apply text-fore text-opacity-50;
+  }
+
+  .menu ul>li:not(:last-child) {
+    @apply mb-2;
+  }
+
+  .menu ul>li :where(a,summary) {
+    @apply flex gap-2;
+    @apply w-full px-2 py-1 rounded-md overflow-hidden;
+    @apply text-fore text-ellipsis whitespace-nowrap;
+    @apply cursor-pointer;
+  }
+
+  .menu ul>li :where(a,summary):hover,
+  .menu ul>li :where(a,summary).active {
+    @apply bg-fore bg-opacity-10;
+  }
+
+  .menu ul>li :where(a,summary).active {
+    @apply font-medium;
+  }
+
+  .menu ul>li details>summary .arrow::before {
+    @apply rotate-45;
+  }
+
+  .menu ul>li details[open]>summary .arrow::before {
+    @apply rotate-[135deg];
+  }
+
+  .menu-alpha ul>li :where(a,summary).active {
+    @apply bg-alpha-500 bg-opacity-10 text-alpha-500;
+  }
+
+  .menu-beta ul>li :where(a,summary).active {
+    @apply bg-beta-500 bg-opacity-10 text-beta-500;
+  }
+
+  /* size */
+
+  .menu-sm ul>li :where(a,summary),
+  .menu-sm h3 {
+    @apply text-base;
+  }
+
+  .menu-sm ul>li:not(:last-child) {
+    @apply mb-0;
+  }
+
+  .menu-sm ul>li :where(a,summary).active {
+    @apply font-bold;
+  }
+
+  .menu-lg ul>li :where(a,summary) {
+    @apply text-lg font-medium;
+  }
+
+  .menu-lg ul>li :where(a,summary).active {
+    @apply font-bold;
+  }
+
+  .menu-divide ul>li:not(:last-child) {
+    @apply mb-0;
+  }
+
+  .menu-divide ul>li:not(:last-child)::after {
+    content: "";
+    @apply block h-[1px] w-full bg-fore bg-opacity-20 my-1;
+  }
+
+  /* block */
+
+  .menu-block {
+    @apply block p-0;
+  }
+
+  .menu-block li {
+    @apply py-2 px-4 hover:bg-fore hover:bg-opacity-10;
+  }
+
+  .menu-block li>label {
+    @apply cursor-pointer;
+  }
+
+  .menu-block li:not(:last-child) {
+    @apply border-b border-fore border-opacity-20;
+  }
+
+  .menu-block li:first-child {
+    @apply rounded-ss-lg rounded-se-lg;
+  }
+
+  .menu-block li:last-child {
+    @apply rounded-es-lg rounded-ee-lg;
+  }
+
+  .menu-block li.active {
+    @apply bg-fore bg-opacity-10;
+  }
+
+  .menu-block.menu-alpha li:hover {
+    @apply bg-alpha-500 bg-opacity-10 text-alpha-500;
+  }
+}

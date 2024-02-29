@@ -1,0 +1,22 @@
+{
+  "slugs": [
+    {
+      "id": "services",
+      "name": "Services",
+      "icon": "🫐",
+      "group": ""
+    },
+    {
+      "id": "ai",
+      "name": "AI Assistant",
+      "icon": "🙂",
+      "group": ""
+    },
+    {
+      "id": "keys",
+      "name": "API Keys",
+      "icon": "🗝️",
+      "group": ""
+    }
+  ]
+}

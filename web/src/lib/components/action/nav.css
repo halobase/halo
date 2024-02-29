@@ -1,0 +1,34 @@
+@layer components {
+  .nav {
+    @apply block p-0;
+  }
+
+  .nav>* {
+    @apply block py-2 px-4 font-semibold;
+    @apply hover:bg-fore hover:bg-opacity-10;
+  }
+
+  .nav>*>label {
+    @apply cursor-pointer;
+  }
+
+  .nav>*:not(:last-child) {
+    @apply border-b border-fore border-opacity-20;
+  }
+
+  .nav>*:first-child {
+    @apply rounded-ss-lg rounded-se-lg;
+  }
+
+  .nav>*:last-child {
+    @apply rounded-es-lg rounded-ee-lg;
+  }
+
+  .nav>*.active {
+    @apply bg-fore bg-opacity-10;
+  }
+
+  .nav.menu-alpha>*:hover {
+    @apply bg-alpha-500 bg-opacity-10 text-alpha-500;
+  }
+}

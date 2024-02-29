@@ -1,0 +1,48 @@
+@layer components {
+  .badge {
+    @apply h-fit;
+    @apply px-2 py-0.5 text-sm font-normal rounded-full;
+    @apply bg-fore bg-opacity-10;
+    @apply text-nowrap;
+  }
+
+  .badge-sm {
+    @apply px-1.5 py-0.5 text-xs;
+  }
+
+  .badge-outline {
+    @apply border border-fore border-opacity-30;
+  }
+
+  .badge-debug {
+    @apply bg-debug-500 bg-opacity-10;
+  }
+
+  .badge-info {
+    @apply bg-info-500 bg-opacity-10;
+  }
+
+  .badge-warn {
+    @apply bg-warn-500 bg-opacity-10;
+  }
+
+  .badge-error {
+    @apply bg-error-500 bg-opacity-10;
+  }
+
+  .badge-alpha {
+    @apply bg-alpha-500 bg-opacity-10;
+  }
+
+  .badge-beta {
+    @apply bg-beta-500 bg-opacity-10;
+  }
+
+  .badge-gamma {
+    @apply bg-gamma-500 bg-opacity-10;
+  }
+
+  .badge-warn.badge-outline {
+    @apply border-debug-500 bg-opacity-20;
+  }
+}

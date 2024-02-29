@@ -1,0 +1,130 @@
+@layer components {
+  .btn {
+    @apply relative;
+    @apply inline-flex items-center justify-center;
+    @apply px-3 py-1.5 rounded-lg h-fit;
+    @apply text-fore text-sm text-center font-medium whitespace-nowrap;
+    @apply bg-back border border-fore border-opacity-30;
+    @apply transition-all duration-300;
+    @apply select-none cursor-pointer outline-none;
+    @apply active:scale-95;
+  }
+
+  .btn.active,
+  .btn:hover {
+    @apply bg-fore bg-opacity-10;
+  }
+
+  /* color */
+
+  .btn-alpha {
+    @apply bg-alpha-400 text-alpha border-alpha-500;
+    @apply hover:bg-alpha-600;
+  }
+
+  .btn-beta {
+    @apply bg-beta-400 text-beta border-beta-500;
+    @apply hover:bg-beta-600;
+  }
+
+  .btn-debug {
+    @apply bg-debug-400 text-debug border-debug-500;
+    @apply hover:bg-debug-600;
+  }
+
+  .btn-info {
+    @apply bg-info-400 text-info border-info-500;
+    @apply hover:bg-info-600;
+  }
+
+  .btn-warn {
+    @apply bg-warn-400 text-warn border-warn-500;
+    @apply hover:bg-warn-600;
+  }
+
+  .btn-error {
+    @apply bg-error-400 text-error border-error-500;
+    @apply hover:bg-error-600;
+  }
+
+  /* light */
+
+  .btn-light {
+    @apply border-opacity-0;
+    @apply text-sm text-fore bg-fore bg-opacity-10;
+    @apply hover:bg-opacity-20;
+  }
+
+  /* ghost */
+
+  .btn-ghost {
+    @apply text-fore;
+    @apply border-opacity-0 bg-opacity-0;
+    @apply hover:bg-opacity-10 hover:border-opacity-0;
+  }
+
+  /* size */
+
+  .btn-xs {
+    @apply px-1 py-0.5 font-normal text-sm;
+  }
+
+  .btn-sm {
+    @apply px-2 py-1 font-normal;
+  }
+
+  .btn-xs {
+    @apply px-2 py-0.5 font-normal;
+  }
+
+  .btn-lg {
+    @apply px-4 py-1.5 text-base;
+  }
+
+  .btn-xl {
+    @apply px-5 py-2.5;
+  }
+
+  /* shape */
+
+  .btn-square {
+    @apply p-2;
+  }
+
+  .btn-square.btn-sm {
+    @apply p-1;
+  }
+
+  .btn-square.btn-xs {
+    @apply p-0.5;
+  }
+
+  .btn-square.btn-lg {
+    @apply p-2.5;
+  }
+
+  .btn-circle {
+    @apply rounded-full p-2;
+  }
+
+  .btn-circle {
+    @apply p-0 md:p-0.5;
+  }
+
+  /* naked */
+
+  .btn-naked {
+    @apply border-opacity-0;
+  }
+
+  .btn:disabled {
+    @apply cursor-not-allowed;
+  }
+
+  /* block */
+  .btn-block {
+    @apply block cursor-pointer rounded-lg;
+    @apply bg-back text-left text-base;
+    @apply hover:bg-fore hover:bg-opacity-5;
+  }
+}

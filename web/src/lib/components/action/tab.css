@@ -1,0 +1,14 @@
+@layer components {
+  .tab {
+    @apply flex overflow-x-auto sb-none;
+  }
+
+  .tab>a {
+    @apply text-center font-medium py-1.5;
+  }
+
+  .tab>a.active {
+    @apply font-bold;
+    @apply border-b-2 border-alpha-400;
+  }
+}

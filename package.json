@@ -1,0 +1,9 @@
+{
+  "name": "halo",
+  "description": "The Halo monorepo.",
+  "private": true,
+  "workspaces": [
+    "server/*",
+    "web/*"
+  ]
+}

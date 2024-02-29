@@ -1,0 +1,13 @@
+@layer components {
+  .coin {
+    @apply cursor-pointer;
+  }
+
+  .coin:has(input[type=checkbox]:checked)>.head {
+    @apply hidden;
+  }
+
+  .coin:not(:has(input[type=checkbox]:checked))>.tail {
+    @apply hidden;
+  }
+}

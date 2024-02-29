@@ -1,0 +1,39 @@
+/* tailwind */
+@import "./tailwind/index.css";
+
+/* layout */
+@import "./components/layout/layout.css";
+@import "./components/layout/drawer.css";
+
+/* action */
+@import "./components/action/button.css";
+@import "./components/action/menu.css";
+@import "./components/action/dialog.css";
+@import "./components/action/breadcrumbs.css";
+@import "./components/action/details.css";
+@import "./components/action/scrollbar.css";
+@import "./components/action/tab.css";
+@import "./components/action/nav.css";
+@import "./components/action/coin.css";
+
+/* display */
+@import "./components/display/card.css";
+@import "./components/display/badge.css";
+@import "./components/display/table.css";
+@import "./components/display/list.css";
+@import "./components/display/intro.css";
+@import "./components/display/progress.css";
+@import "./components/display/bubble.css";
+@import "./components/display/markdown.css";
+@import "./components/display/dot.css";
+@import "./components/display/skeleton.css";
+@import "./components/display/text.css";
+
+/* form */
+@import "./components/form/form.css";
+@import "./components/form/checkbox.css";
+@import "./components/form/input.css";
+@import "./components/form/select.css";
+@import "./components/form/switch.css";
+@import "./components/form/radio.css";
+@import "./components/form/range.css";

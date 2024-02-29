@@ -1,0 +1,32 @@
+openapi: '3.1'
+info:
+  title: Models
+  version: '0.0.1'
+paths:
+  /blueberry:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_url:
+                  type: string
+                  description: URL to the image to be detected.
+                  example: https://example.org/image/0.jpg
+              required:
+                - image_url
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: The number of blueberries.
+components:
+  schemas: {}

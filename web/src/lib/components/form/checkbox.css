@@ -1,0 +1,71 @@
+@layer components {
+  .checkbox {
+    @apply appearance-none relative inline-grid place-content-center;
+    @apply w-5 h-5 rounded-md;
+    @apply border border-fore border-opacity-30;
+    @apply cursor-pointer;
+    @apply transition-colors duration-100;
+  }
+
+  .checkbox::before {
+    @apply w-3.5 h-3.5 rounded scale-0 transition-transform duration-100;
+    @apply bg-fore bg-opacity-30;
+    content: "";
+  }
+
+  .checkbox:checked::before {
+    @apply scale-100;
+  }
+
+  /* sizes */
+
+  .checkbox-sm {
+    @apply w-4 h-4;
+  }
+
+  .checkbox-sm::before {
+    @apply w-2.5 h-2.5;
+  }
+
+  /* colors */
+
+  .checkbox-alpha:checked {
+    @apply border-alpha-500;
+  }
+
+  .checkbox-alpha::before {
+    @apply bg-alpha-400;
+  }
+
+  .checkbox-beta:checked {
+    @apply border-beta-500;
+  }
+
+  .checkbox-beta::before {
+    @apply bg-beta-400;
+  }
+
+  label.checkbox {
+    @apply card card-base py-2 px-3;
+    @apply block w-auto h-auto rounded-md;
+  }
+
+  label.checkbox:has(input:checked) {
+    @apply bg-fore bg-opacity-10;
+  }
+
+  label.checkbox::before,
+  label.checkbox > input[type=checkbox] {
+    @apply hidden;
+  }
+
+  label.checkbox-alpha:has(input:checked) {
+    @apply card-alpha text-fore;
+  }
+
+  /* sizes */
+
+  label.checkbox-sm {
+    @apply py-1 px-2;
+  }
+}

@@ -1,0 +1,73 @@
+@layer components {
+  .intro h1 {
+    @apply text-2xl font-semibold;
+  }
+
+  .intro h2 {
+    @apply font-semibold;
+  }
+
+  .intro h3 {
+    @apply font-semibold mb-2;
+  }
+
+  .intro h4 {
+    @apply text-sm font-semibold mb-1;
+  }
+
+  .intro h5 {
+    @apply text-sm font-semibold mb-0.5;
+  }
+
+  .intro h6 {
+    @apply text-sm font-semibold mb-0;
+  }
+
+  .intro-sm h2 {
+    @apply text-sm;
+  }
+
+  .intro-lg h1 {
+    @apply text-2xl font-bold mb-1;
+  }
+
+  .intro-lg h2 {
+    @apply text-lg font-medium mb-1;
+  }
+
+  .intro-xl h1 {
+    @apply text-2xl font-semibold mb-2;
+  }
+
+  .intro-xl h2 {
+    @apply text-xl font-semibold mb-2;
+  }
+
+  .intro-2xl h1 {
+    @apply text-3xl font-bold mb-6;
+  }
+
+  .intro-2xl h2 {
+    @apply text-2xl font-bold my-4;
+  }
+
+  .intro-2xl h3 {
+    @apply text-xl font-semibold my-2;
+  }
+
+  .intro-2xl h4 {
+    @apply text-lg font-medium my-2;
+  }
+
+  .intro p {
+    @apply text-sm text-fore text-opacity-80 mb-2;
+  }
+
+  .intro p:last-child {
+    @apply mb-0;
+  }
+
+  .text-intro {
+    @apply text-sm text-fore text-opacity-80;
+  }
+}

@@ -1,0 +1,58 @@
+@layer components {
+  .input {
+    @apply relative w-full;
+    @apply px-4 py-1.5 rounded-md;
+    @apply text-sm text-fore bg-fore bg-opacity-10;
+    @apply outline-none border border-fore border-opacity-0;
+  }
+
+  .input:focus {
+    @apply bg-back border-opacity-30;
+  }
+
+  .input::placeholder {
+    @apply text-fore text-opacity-60 text-sm;
+  }
+
+  .input-center {
+    @apply text-center;
+  }
+
+  .input-center::placeholder {
+    @apply text-center;
+  }
+
+  .input-readonly:focus,
+  .input[readonly]:focus {
+    @apply bg-fore bg-opacity-10 border-opacity-0 outline-0;
+  }
+
+  .input-disabled,
+  .input:disabled {
+    @apply cursor-not-allowed;
+  }
+
+  .input-outline:focus {
+    @apply outline-1 outline-offset-2 outline-fore;
+  }
+
+  input.badge {
+    @apply w-full outline-none select-none;
+  }
+
+  input.plain {
+    @apply w-full outline-none select-none;
+    background-color: transparent;
+  }
+
+  textarea.input {
+    @apply rounded-lg px-2.5;
+    field-sizing: content;
+  }
+
+  .input[type="number"],
+  .input::-webkit-outer-spin-button,
+  .input::-webkit-inner-spin-button {
+    @apply appearance-none m-0;
+  }
+}

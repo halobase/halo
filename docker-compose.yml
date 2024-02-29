@@ -1,0 +1,22 @@
+version: '3'
+services:
+  halo-server:
+    image: docker.io/mivinci/halo-server:latest
+    ports:
+      - 23003:3000
+    environment:
+      - TOKEN_SECRET=${TOKEN_SECRET}
+
+      - SURREAL_URL=${SURREAL_URL}
+      - SURREAL_NS=${SURREAL_NS}
+      - SURREAL_DB=${SURREAL_DB}
+      - SURREAL_USER=${SURREAL_USER}
+      - SURREAL_PASS=${SURREAL_PASS}
+
+      - OPENAI_URL=${OPENAI_URL}
+      - OPENAI_KEY=${OPENAI_KEY}
+
+      - COS_SECRET_ID=${COS_SECRET_ID}
+      - COS_SECRET_KEY=${COS_SECRET_KEY}
+      - COS_REGION=${COS_REGION}
+      - COS_BUCKET=${COS_BUCKET}

@@ -1,0 +1,54 @@
+@layer components {
+  .app {
+    @apply w-screen h-screen bg-back text-fore;
+    @apply transition-all duration-300;
+    @apply flex flex-col;
+  }
+
+  .center {
+    @apply w-full h-full;
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .container {
+    @apply max-w-screen-md mx-auto;
+    @apply flex flex-col gap-6 px-4 py-4 md:py-6 md:px-10;
+  }
+
+  .container-lg {
+    @apply max-w-screen-lg;
+  }
+
+  .container-xl {
+    @apply max-w-screen-xl;
+  }
+
+  .container-2xl {
+    @apply max-w-screen-2xl;
+  }
+
+  .container-row {
+    @apply flex-row h-auto;
+  }
+
+  .container-l {
+    @apply ml-0;
+  }
+
+  .container-r {
+    @apply mr-0;
+  }
+
+  .app hr,
+  .divider {
+    @apply border-t border-fore border-opacity-20 my-2;
+  }
+
+  .app a {
+   @apply underline-offset-4;
+  }
+
+  .app details > summary::-webkit-details-marker {
+    @apply hidden;
+  }
+}

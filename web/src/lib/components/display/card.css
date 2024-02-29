@@ -1,0 +1,86 @@
+@layer components {
+  .card {
+    @apply block;
+    @apply border border-fore border-opacity-20 rounded-lg;
+  }
+
+  .card-debug {
+    @apply block;
+    @apply border border-debug-500 rounded-lg;
+    @apply bg-debug-500 bg-opacity-10;
+    @apply text-sm text-debug-500;
+  }
+
+  .card-error {
+    @apply block;
+    @apply border border-error-500 rounded-lg;
+    @apply bg-error-500 bg-opacity-10;
+    @apply text-sm text-error-500;
+  }
+
+  .card-warn {
+    @apply block;
+    @apply border border-warn-500 rounded-lg;
+    @apply bg-warn-500 bg-opacity-10;
+    @apply text-sm text-warn-500;
+  }
+
+  .card-info {
+    @apply block;
+    @apply border border-info-500 rounded-lg;
+    @apply bg-info-500 bg-opacity-10;
+    @apply text-sm text-info-500;
+  }
+
+  .card-alpha {
+    @apply block;
+    @apply border border-alpha-500 rounded-lg;
+    @apply bg-alpha-500 bg-opacity-10;
+    @apply text-sm text-alpha-500;
+  }
+
+  .card-base {
+    @apply block;
+    @apply text-sm;
+  }
+
+  .card-naked {
+    @apply border-0;
+  }
+
+  .card-fill {
+    @apply bg-back;
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
+  .card-nopad {
+    @apply p-0;
+  }
+
+  .card-dotted {
+    @apply border-dotted;
+  }
+
+  .card-dashed {
+    @apply border-dashed;
+  }
+
+  .card-active {
+    @apply cursor-pointer bg-fore bg-opacity-10;
+  }
+
+  .card-wrap {
+    @apply flex flex-col;
+    @apply sm:flex-row sm:justify-between;
+  }
+
+  .card-wrap-reverse {
+    @apply flex flex-col-reverse;
+    @apply sm:flex-row sm:justify-between;
+  }
+
+  .card > legend {
+    @apply text-sm text-fore text-opacity-80 px-1;
+    @apply capitalize;
+  }
+}

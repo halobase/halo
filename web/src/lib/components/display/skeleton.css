@@ -1,0 +1,6 @@
+@layer components {
+  .skeleton {
+    @apply rounded-lg bg-fore bg-opacity-10;
+    @apply w-full h-4;
+  }
+}

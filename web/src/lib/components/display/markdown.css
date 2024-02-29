@@ -1,0 +1,30 @@
+@layer components {
+  .markdown h2 {
+    @apply text-2xl font-semibold mb-4;
+  }
+
+  .markdown p {
+    @apply my-2 text-justify;
+  }
+
+  .markdown p:last-child {
+    @apply mb-0;
+  }
+
+  .markdown p:first-child {
+    @apply mt-0;
+  }
+
+  .markdown ol {
+    @apply list-decimal pl-8;
+  }
+
+  .markdown ul {
+    @apply list-disc pl-8;
+  }
+
+  .markdown ol>li:not(:last-child),
+  .markdown ul>li:not(:last-child) {
+    @apply mb-1.5;
+  }
+}

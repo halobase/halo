@@ -1,0 +1,23 @@
+@layer components {
+  .text-truncated {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  .text-2xs {
+    font-size: 0.5rem;
+  }
+
+  .arrow::before {
+    @apply block w-2 h-2;
+    @apply border-t-2 border-r-2 border-fore border-opacity-40;
+    content: "";
+  }
+
+  .arrow-r::before {
+    @apply rotate-45;
+  }
+
+  .arrow-b::before {
+    @apply rotate-90;
+  }
+}

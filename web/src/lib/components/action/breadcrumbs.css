@@ -1,0 +1,15 @@
+@layer components {
+  .breadcrumbs {
+    @apply flex flex-wrap;
+  }
+
+  .breadcrumbs > li {
+    @apply whitespace-nowrap;
+    @apply flex items-baseline;
+  }
+
+  .breadcrumbs > li::before {
+    @apply text-fore text-opacity-80;
+    content: "/";
+  }
+}

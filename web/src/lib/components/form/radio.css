@@ -1,0 +1,50 @@
+@layer components {
+  .radio {
+    @apply appearance-none;
+  }
+
+  .radio::before {
+    @apply text-xs opacity-0;
+    content: "✔️";
+  }
+
+  .radio:checked::before {
+    @apply opacity-100;
+  }
+
+  label.radio {
+    @apply card card-base;
+    @apply block w-auto h-auto rounded-md;
+    @apply cursor-pointer;
+  }
+
+  label.radio:hover,
+  label.radio:has(input:checked) {
+    @apply bg-fore bg-opacity-10;
+  }
+
+  label.radio::before,
+  label.radio > input[type=radio] {
+    @apply hidden;
+  }
+
+  label.radio-alpha:has(input:checked) {
+    @apply card-alpha text-fore;
+  }
+
+  label.radio-debug:has(input:checked) {
+    @apply card-debug text-fore;
+  }
+
+  label.radio-info:has(input:checked) {
+    @apply card-info text-fore;
+  }
+
+  label.radio-warn:has(input:checked) {
+    @apply card-warn text-fore;
+  }
+
+  label.radio-warn:has(input:checked) {
+    @apply card-warn text-fore;
+  }
+}

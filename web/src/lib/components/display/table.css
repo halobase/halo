@@ -1,0 +1,52 @@
+@layer components {
+  .table {
+    @apply w-full text-left text-sm;
+  }
+
+  .table > thead {
+    @apply text-fore text-opacity-80 font-semibold whitespace-nowrap;
+    @apply bg-fore bg-opacity-5;
+  }
+
+  .table :where(th, td) {
+    @apply px-4 py-3;
+    @apply align-middle text-ellipsis;
+  }
+
+  .table > thead > tr:first-child,
+  .table > tbody > tr:not(:last-child) {
+    @apply border-b border-fore border-opacity-20;
+  }
+
+  .table :where(th, td).cell-sm {
+    @apply hidden sm:table-cell;
+  }
+
+  .table :where(th, td).cell-md {
+    @apply hidden md:table-cell;
+  }
+
+  .table :where(th, td).cell-lg {
+    @apply hidden lg:table-cell;
+  }
+
+  .table :where(th, td).cell-xl {
+    @apply hidden xl:table-cell;
+  }
+
+  .table :where(th, td).cell-2xl {
+    @apply hidden 2xl:table-cell;
+  }
+
+  .table-hl > tbody > tr {
+    @apply hover:bg-fore hover:bg-opacity-10 cursor-pointer;
+  }
+
+  .table-nowrap :where(th, td) {
+    @apply text-nowrap;
+  }
+
+  .table-fixed :where(th, td) {
+    @apply overflow-hidden;
+  }
+}

@@ -1,7 +1,11 @@
 version: '3'
 services:
+  halo-surreal:
+    image: surrealdb/surrealdb
+    entrypoint: surreal start --log warn --auth file:/data/surrealdb
+
   halo-server:
-    image: docker.io/mivinci/halo-server:latest
+    image: mivinci/halo-server:latest
     ports:
       - 23003:3000
     environment:

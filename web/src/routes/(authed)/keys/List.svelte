@@ -27,9 +27,9 @@
       <tr>
         <th class="w-10"></th>
         <th>Key</th>
-        <th>Name</th>
-        <th class="cell-md w-24">Scopes</th>
-        <th class="cell-lg">Accessed</th>
+        <th>名称</th>
+        <th class="cell-md w-24">作用域</th>
+        <th class="cell-lg">上次使用</th>
         <th class="w-10 sm:w-20"></th>
       </tr>
     </thead>
@@ -53,7 +53,7 @@
               }}
             >
               <span class="sm:hidden">⨉</span>
-              <span class="hidden sm:block">Revoke</span>
+              <span class="hidden sm:block">撤销</span>
             </button>
           </td>
         </tr>
@@ -68,13 +68,14 @@
 <Confirm
   color="error"
   action="?/delete"
-  title="Confirm to revoke"
+  title="撤销 API Key"
+  confirm="我确定"
   bind:enable
   on:success={__delete}
 >
-  <p class="text-sm" slot="extra">
-    Are you sure to revoke <span class="badge">{format(dying)}</span> ? This
-    operation can <strong>NOT</strong> be undone.
+  <p class="text-sm">
+    确定撤销 <span class="badge">{format(dying)}</span> 吗？该操作
+    <strong>不可</strong> 逆转。
   </p>
   <input class="hidden" type="text" name="id" value={dying?.id} />
 </Confirm>

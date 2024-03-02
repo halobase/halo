@@ -13,8 +13,7 @@
   </label>
   <a class="text-nowrap" href="/">
     <h1 class="text-3xl font-extrabold">
-      😇
-      <span class="hidden sm:inline">XXX 引擎</span>
+      Halo
     </h1>
   </a>
 </div>

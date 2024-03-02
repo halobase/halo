@@ -1,14 +1,22 @@
 @layer components {
   .tab {
-    @apply flex overflow-x-auto sb-none;
+    @apply flex gap-2 overflow-x-auto sb-none;
   }
 
   .tab>a {
-    @apply text-center font-medium py-1.5;
+    @apply text-sm text-center font-medium py-1.5;
   }
 
   .tab>a.active {
-    @apply font-bold;
     @apply border-b-2 border-alpha-400;
+  }
+
+  .tab>a>* {
+    @apply py-1 rounded-lg;
+  }
+
+  .tab>a:hover>*,
+  .tab>a.active>* {
+    @apply bg-fore bg-opacity-10;
   }
 }

@@ -3,30 +3,36 @@
   import { PageHeader } from "$lib";
   export let data;
 
-  const { service } = data;
+  const { user } = data;
 
-  const links = [
-    { id: "readme", name: "Overview" },
-    { id: "ops", name: "API Reference" }
-  ];
+  const links = [{ id: "docs", name: "文档" }];
+  if (user?.id === data.service.user) {
+    links.push({ id: "settings", name: "设置" });
+    links.push({ id: "nodes", name: "节点" });
+  }
 </script>
 
 <div class="border-b border-fore border-opacity-10">
   <div class="container container-xl pb-0">
     <PageHeader>
-      <svelte:fragment slot="title">{service.schema.info.title}</svelte:fragment>
+      <svelte:fragment slot="title">
+        {data.service.icon}
+        {data.service.schema.info.title}
+      </svelte:fragment>
       <svelte:fragment slot="intro">
-        <h1 class="!mb-0">{service.icon} {service.schema.info.title}</h1>
+        <p>{data.service.schema.info.description}</p>
       </svelte:fragment>
       <svelte:fragment>
         <nav class="tab">
           {#each links as link}
-            {@const href = `/services/${service.id}/${link.id}`}
+            {@const href = `/services/${data.service.id}/${link.id}`}
             <a
-              class="min-w-32"
+              class="min-w-24"
               class:active={$page.url.pathname.startsWith(href)}
-              {href}>{link.name}</a
+              {href}
             >
+             <div>{link.name}</div>
+            </a>
           {/each}
         </nav>
       </svelte:fragment>

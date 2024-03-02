@@ -44,7 +44,7 @@
   }
 </script>
 
-<label class="block btn btn-sm btn-ghost btn-square" {title}>
+<label class="btn btn-sm btn-ghost btn-square" {title}>
   <input
     class="hidden"
     type="file"

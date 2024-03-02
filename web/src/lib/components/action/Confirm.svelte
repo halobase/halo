@@ -9,18 +9,16 @@
   /** @type {import("$lib/tailwind/types").Variants} */
   export let color = "alpha";
   export let title = "Please confirm";
+  export let confirm = "Confirm";
 </script>
 
 <Dialog bind:enable {title}>
-  <div class="w-80 sm:w-96">
-    <slot name="extra">
-      <p>You will NOT be enable to undo this operation.</p>
-    </slot>
+  <div class="w-64 sm:w-96">
+    <slot name="intro" />
     <div class="mt-4">
       <Form {action} {color} on:failure on:success>
         <slot />
-        <svelte:fragment slot="cancel">Cancel</svelte:fragment>
-        <svelte:fragment slot="submit">Confirm</svelte:fragment>
+        <svelte:fragment slot="submit">{confirm}</svelte:fragment>
       </Form>
     </div>
   </div>

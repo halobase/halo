@@ -1,8 +1,10 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { OpenAPIObject } from "openapi3-ts/oas30";
+import { OpenAPIObject, OperationObject, RequestBodyObject } from "openapi3-ts/oas30";
 import { surreal } from "@lib/surreal";
 import { Node, Service } from "@lib/types";
-import { $list, $post, $readme, $put_node, $schema, $list_nodes, $get, $delete, $update } from "./$";
+import { $list, $post as $create, $readme, $create_node, $schema, $list_nodes, $get, $delete, $update } from "./$";
+import { ChatCompletionTool } from "openai/resources/index.mjs";
+import { HTTPException } from "hono/http-exception";
 
 
 const app = new OpenAPIHono();
@@ -49,10 +51,13 @@ app.openapi($readme, async (ctx) => {
   return ctx.text(readme);
 });
 
-app.openapi($post, async (ctx) => {
+app.openapi($create, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
   const [service] = await surreal.create<Service>("service", init, auth.token);
+  const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
+  await surreal.update<Service>(service.id, { tools }, auth.token);
+  service.tools = tools;
   return ctx.json(service);
 });
 
@@ -62,6 +67,9 @@ app.openapi($update, async (ctx) => {
   const { id } = ctx.req.param();
   const init = ctx.req.valid("json");
   const [service] = await surreal.update<Service>(id, init, auth.token);
+  const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
+  await surreal.update<Service>(service.id, { tools }, auth.token);
+  service.tools = tools;
   return ctx.json(service);
 });
 
@@ -72,7 +80,7 @@ app.openapi($delete, async (ctx) => {
   return ctx.newResponse(null);
 });
 
-app.openapi($put_node, async (ctx) => {
+app.openapi($create_node, async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.param();
   const init = ctx.req.valid("json");
@@ -120,5 +128,35 @@ app.all("/:id/fetch/*", async (ctx) => {
   const req = new Request(url, ctx.req.raw);
   return fetch(req);
 });
+
+const allow_methods = ["get", "post", "delete", "put", "patch"];
+
+function flatten_openai_tools(service: string, schema?: OpenAPIObject): ChatCompletionTool[] {
+  if (!schema) return [];
+
+  const tools: ChatCompletionTool[] = [];
+  Object.entries(schema.paths ?? {}).forEach(function ([path, path_object]) {
+    Object.entries(path_object).forEach(function ([method, operation]) {
+      if (allow_methods.includes(method)) {
+        const op = operation as OperationObject;
+        if (!op.operationId) {
+          throw new HTTPException(400, {
+            message: `Service schema missing operationId in path ${path}`
+          });
+        }
+        tools.push({
+          type: "function",
+          function: {
+            name: `${service}::${op.operationId}`,
+            description: op.description,
+            parameters: (op.requestBody as RequestBodyObject)
+              .content["application/json"].schema as Record<string, unknown>,
+          }
+        })
+      }
+    });
+  });
+  return tools;
+}
 
 export default app;

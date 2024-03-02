@@ -18,7 +18,7 @@
 
   .dialog > * {
     @apply relative;
-    @apply min-w-72 max-w-80 sm:min-w-96 sm:max-w-fit;
+    @apply min-w-64 max-w-80 sm:min-w-96 sm:max-w-fit;
   }
 
   .dialog-fit > * {

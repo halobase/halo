@@ -4,6 +4,10 @@
   /** @type {import("$lib/types").Operation} */
   export let op;
 
+  async function __fetch() {
+    op.externalDocs?.url
+  }
+
   const codes = [
     {
       lang: "JavaScript",
@@ -26,6 +30,6 @@ console.log(updated);`
   ];
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="grid gap-4">
   <Codeblock {codes} title="Example" />
 </div>

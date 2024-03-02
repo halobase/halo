@@ -3,20 +3,19 @@ import { $base, $openapi } from "@lib/$";
 
 
 export const $ServiceInit = z.object({
-  name: z.string({ description: "Service name with only underscores." }),
-  readme: z.string({ description: "Service README content in plain text." }),
-  schema: $openapi,
+  readme: z.string({ description: "Service README content in plain text." }).optional(),
+  schema: z.any({ description: "OpenAPI 3.0 schema." }).optional(),
   icon: z.string({ description: "Service icon. Can be any emoji character." }).optional(),
-  public: z.boolean({ description: "Accessible to everyone." }).optional(),
+  level: z.number({ description: "Users with this level have accessible to this service." }).optional(),
 }).openapi("ServiceInit");
 
 export const $Service = $base.merge($ServiceInit).openapi("Service");
 
 export const $Node = $base.extend({
-  url: z.string(),
-  service: z.string(),
-  user: z.string(),
-  tags: z.array(z.string()),
+  url: z.string({ description: "Service node URL." }),
+  service: z.string({ description: "Service ID." }),
+  user: z.string({ description: "User ID." }),
+  tags: z.array(z.string({ description: "Service node tag." })),
 }).openapi("Node");
 
 export const $NodeInit = z.object({
@@ -115,7 +114,7 @@ export const $readme = createRoute({
       description: "The service readme in Markdown format.",
       content: {
         "text/plain": {
-          schema: z.string({description: "Service README in plain text."})
+          schema: z.string({ description: "Service README in plain text." })
         }
       }
     }
@@ -210,7 +209,7 @@ export const $delete = createRoute({
   }
 });
 
-export const $put_node = createRoute({
+export const $create_node = createRoute({
   method: "post",
   path: "/{id}/nodes",
   summary: "Create a service node",

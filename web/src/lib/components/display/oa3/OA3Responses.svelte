@@ -13,7 +13,7 @@
 <div>
   {#if status_selected}
     <div class="flex items-center justify-between">
-      <h2>Responses</h2>
+      <h2>响应</h2>
       <div class="flex gap-2">
         {#each entries as [value]}
           <label

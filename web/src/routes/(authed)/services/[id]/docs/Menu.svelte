@@ -13,7 +13,7 @@
       <li>
         <details
           open={$page.url.pathname
-            .slice(`/services/${service}/ops/`.length)
+            .slice(`/services/${service}/docs/`.length)
             .startsWith(k.toLowerCase())}
         >
           <summary class="flex items-center justify-between mb-2">
@@ -22,7 +22,7 @@
           </summary>
           <ul class="pl-4 overflow-hidden">
             {#each ops as { operationId, method, summary }}
-              {@const href = `/services/${service}/ops/${operationId}/schema`}
+              {@const href = `/services/${service}/docs/${operationId}/schema`}
               <li>
                 <a
                   class="flex items-center justify-between"

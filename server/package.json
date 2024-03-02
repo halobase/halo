@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "build": "bun build src/index.ts --minify --target=bun --outfile=build/server.js",
+    "build": "bun build src/index.ts --target=bun --outfile=build/server.js",
     "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {

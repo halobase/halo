@@ -22,8 +22,8 @@
 </script>
 
 <svelte:head>
-  <title>API Keys \ Halo</title>
-  <meta name="description" content="API Keys \ Halo " />
+  <title>API Keys | 精准农业数字模型 AI 服务平台</title>
+  <meta name="description" content="API Keys | 精准农业数字模型 AI 服务平台 " />
 </svelte:head>
 
 <div class="container container-lg lg:pt-8 2xl:pt-16">
@@ -31,12 +31,11 @@
     <div class="intro intro-2xl">
       <h1>API Keys</h1>
       <p>
-        API keys can be used to authenticate server-to-server communication.
+        API Key 用于服务端到服务端通信，所以不能将其暴露在任何客户端。
       </p>
       <p>
-        Halo does not save your API keys in plain text, so you have to generate
-        new API keys if losing any, and applications using the lost key has to
-        be updated as well. Learn more about the
+        所有 API Key 不会被明文存储，且只能在刚生成时可见。如果丢失或泄露，则需生成新的 API Key, 
+        同时更新使用了该 API key 的应用。更多关于 API key 的信息见
         <a
           class="underline"
           href="https://en.wikipedia.org/wiki/API_key"
@@ -47,16 +46,15 @@
     </div>
     <div>
       <button class="btn btn-alpha" type="button" on:click={__toggle}>
-        + New
+        + 生成 API Key
       </button>
     </div>
   </div>
   {#if created}
     <div class="card card-info p-4">
-      <p>Successfully generated a new API key!</p>
+      <p class="mb-1">生成成功!</p>
       <p>
-        Please copy the API key at once, you will NOT be enable to see it again,
-        and have to generate a new one if losing it.
+        请立刻保存新生成的 API key, 它不会再显示，如果丢失或泄露，则需重新生成。
       </p>
       <div class="py-1"></div>
       <Clipboard value={created} />
@@ -65,14 +63,14 @@
   <List {keys} />
 </div>
 
-<Dialog bind:enable title="Generate an API key">
+<Dialog bind:enable title="生成 API Key">
   <Form action="?/create" on:success={__create}>
     <label>
-      <p>Purpose of the new API key.</p>
+      <h3>名称</h3>
       <input class="input" type="text" name="name" value="API Key" required />
     </label>
     <div class="group">
-      <p>Scopes servers with the new API key has access to.</p>
+      <h3>作用域</h3>
       <div class="flex flex-wrap gap-4 mt-2">
         {#each scopes as scope}
           <label class="checkbox checkbox-alpha checkbox-sm">
@@ -82,6 +80,6 @@
         {/each}
       </div>
     </div>
-    <svelte:fragment slot="submit">Generate</svelte:fragment>
+    <svelte:fragment slot="submit">生成</svelte:fragment>
   </Form>
 </Dialog>

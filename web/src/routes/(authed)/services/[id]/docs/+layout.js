@@ -1,7 +1,6 @@
 export async function load(event) {
   const { service } = await event.parent();
   const schema = await group_schema(service.schema);
-  console.log(schema);
   return {
     schema,
   }
@@ -10,7 +9,7 @@ export async function load(event) {
 const allow_methods = ["get", "post", "delete", "put", "patch"];
 
 /** 
- * @param {import("$lib/types").Schema} schema 
+ * @param {import("$lib/types").Schema} schema
  * @returns {Promise<import("$lib/types").SchemaGrouped>} 
  */
 async function group_schema(schema) {
@@ -19,7 +18,7 @@ async function group_schema(schema) {
   /** @type {Record<string, import("$lib/types").Operation>} */
   const operations = {};
 
-  Object.entries(schema.paths).forEach(function ([path, path_object]) {
+  Object.entries(schema?.paths ?? {}).forEach(function ([path, path_object]) {
     const key = path_object.summary ?? path;
     groups[key] = [];
     Object.entries(path_object).forEach(function ([method, operation]) {

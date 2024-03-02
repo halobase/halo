@@ -55,6 +55,7 @@
     class:justify-end={align === "right"}
     class:flex-col-reverse={align === "full"}
   >
+    <slot name="action" />
     {#if with_cancel}
       <button
         class="btn btn-ghost"

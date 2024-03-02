@@ -1,8 +1,11 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { $delete, $list, $post } from "./$";
 import { surreal } from "@lib/surreal";
-import { Key } from "@lib/types";
+import { Key, User } from "@lib/types";
 import { digest, hexify } from "@lib/encoding";
+import env from "@lib/env";
+import { Jwt } from "hono/utils/jwt";
+import { DAY } from "@lib/time";
 
 const app = new OpenAPIHono();
 
@@ -19,13 +22,22 @@ app.openapi($post, async (ctx) => {
   const seed = crypto.randomUUID();
   const secret = hexify(await digest("sha-1", seed));
   const secret_truncated = secret.slice(-4);
-  const [key] = await surreal.create<Key>(
-    "key",
+  const token_surrealdb = await persistant_token(auth.user);
+  const [[key]] = await surreal.query<[Key]>(
+    `begin;
+      let $keys = (create key content $init);
+      create k2t content {key: $keys[0].id, token: $token_surrealdb};
+      return $keys;
+     commit;
+    `,
     {
-      ...init,
-      prefix,
-      secret,
-      secret_truncated,
+      init: {
+        ...init,
+        prefix,
+        secret,
+        secret_truncated,
+      },
+      token_surrealdb,
     },
     auth.token,
   );
@@ -39,6 +51,19 @@ app.openapi($delete, async (ctx) => {
   await surreal.delete(id, auth.token);
   return ctx.newResponse(null, 200);
 });
+
+async function persistant_token(user: User) {
+  const expiry = Date.now() + 356 * 100 * DAY; // 100 years is enough :)
+  return Jwt.sign({
+    iss: "halo.dev",
+    exp: Math.floor(expiry / 1000),
+    user,
+    ns: env.SURREAL_NS,
+    db: env.SURREAL_DB,
+    sc: user.scope ?? "user",
+    tk: "user",
+  }, env.TOKEN_SECRET!);
+}
 
 export default app;
 

@@ -26,7 +26,7 @@ app.openapi($token, async (ctx) => {
 
   const expiry = Date.now() + 1 * DAY;
   const access_token = await Jwt.sign({
-    iss: "haloz.dev",
+    iss: "halo.dev",
     exp: Math.floor(expiry / 1000),
     user,
     ns: env.SURREAL_NS,

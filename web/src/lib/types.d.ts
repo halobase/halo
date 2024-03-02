@@ -31,11 +31,7 @@ export type Doc = Base & {
   knowledge: string,
 };
 
-export type Service = Base & {
-  public: boolean,
-  readme: string,
-  schema: Schema,
-};
+
 
 export type Key = Base & {
   prefix: string,
@@ -49,6 +45,12 @@ export type Key = Base & {
 };
 
 export type Schema = OpenAPIObject;
+
+export type Service = Base & {
+  level?: number,
+  readme?: string,
+  schema: Schema,
+};
 
 export type Operation = OperationObject & {
   method: string,
@@ -119,3 +121,11 @@ export type Message = Base & {
   role: "user" | "assistant" | "system",
   content: MessageContent[]
 };
+
+declare global {
+  type FileInputEvent = Event & {
+    target: EventTarget & {
+      files?: FileList,
+    } | null
+  };
+} 

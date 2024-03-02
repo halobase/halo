@@ -1,10 +1,34 @@
 @layer components {
+  .markdown {
+    @apply w-full;
+  }
+  
+  .markdown h1 {
+    @apply text-3xl font-bold my-5;
+  }
+
   .markdown h2 {
-    @apply text-2xl font-semibold mb-4;
+    @apply text-2xl font-semibold my-4;
+  }
+
+  .markdown h3 {
+    @apply text-xl font-medium my-4;
+  }
+
+  .markdown h4 {
+    @apply text-lg font-normal my-4;
+  }
+
+  .markdown h5 {
+    @apply font-normal my-4;
+  }
+
+  .markdown h6 {
+    @apply text-sm font-normal my-4;
   }
 
   .markdown p {
-    @apply my-2 text-justify;
+    @apply my-2 text-justify break-all;
   }
 
   .markdown p:last-child {
@@ -15,16 +39,60 @@
     @apply mt-0;
   }
 
+  .markdown a {
+    @apply text-alpha-400 hover:underline;
+  }
+
   .markdown ol {
-    @apply list-decimal pl-8;
+    @apply list-decimal pl-8 my-2;
   }
 
   .markdown ul {
-    @apply list-disc pl-8;
+    @apply list-disc pl-8 my-2;
   }
 
   .markdown ol>li:not(:last-child),
   .markdown ul>li:not(:last-child) {
     @apply mb-1.5;
+  }
+
+  .markdown pre {
+    @apply w-full overflow-x-auto;
+    @apply px-3 py-2 rounded-lg;
+    @apply text-sm;
+    @apply bg-fore bg-opacity-10;
+  }
+
+  .markdown :not(pre)>code {
+    @apply text-sm p-1 bg-fore bg-opacity-10 rounded-md;
+  }
+
+  .markdown img {
+    @apply py-2;
+  }
+
+  .markdown blockquote {
+    @apply bg-[#94949514] px-2;
+    @apply border-l-4 border-alpha-400;
+    @apply italic;
+  }
+  
+  .markdown table {
+    @apply block border-collapse border-spacing-0 w-full my-4;
+    @apply overflow-auto;
+  }
+  
+  .markdown table thead {
+    @apply border-t-2 border-fore;
+    @apply border-b border-fore;
+  }
+  
+  .markdown table tbody {
+    @apply border-b-2 border-fore;
+  }
+  
+  .markdown table th,
+  .markdown table td {
+    @apply px-4 py-1;
   }
 }

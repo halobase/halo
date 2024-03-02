@@ -57,6 +57,10 @@
     @apply p-0;
   }
 
+  .card-list>*:not(:last-child) {
+    @apply border-b border-fore border-opacity-20;
+  }
+
   .card-dotted {
     @apply border-dotted;
   }

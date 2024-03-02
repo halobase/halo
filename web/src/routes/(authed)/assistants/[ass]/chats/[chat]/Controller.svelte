@@ -4,8 +4,8 @@
   import Options from "./Options.svelte";
 </script>
 
-<div class="flex gap-2">
-  <ul class="card flex">
+<div class="flex items-center gap-2">
+  <ul class="card flex h-fit">
     <li>
       <FileInput accept="image/*" icon="image" title="添加图片" />
     </li>

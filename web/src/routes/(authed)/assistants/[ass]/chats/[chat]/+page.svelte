@@ -41,6 +41,11 @@
   }
 </script>
 
+<svelte:head>
+  <title>{data.chat.summary}</title>
+  <meta name="description" content={data.chat.summary} />
+</svelte:head>
+
 <div class="drawer drawer-r drawer-s-xl">
   <input type="checkbox" id="chats" />
   <main class="container grow overflow-hidden pt-0">

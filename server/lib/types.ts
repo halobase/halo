@@ -1,3 +1,5 @@
+import { ChatCompletionTool } from "openai/resources/index";
+
 type ID = string;
 
 type Base = {
@@ -36,18 +38,10 @@ export type Auth = {
 };
 
 export type Service = Base & {
-  public?: boolean,
-  readme: string,
-  schema: {
-    openapi: string,
-    info: {
-      title: string,
-      version: string,
-    },
-    tags?: {
-      name: string,
-    }[]
-  },
+  level?: number,
+  readme?: string,
+  schema?: object,
+  tools?: Array<ChatCompletionTool>,
 };
 
 export type Node = Base & {
@@ -66,6 +60,11 @@ export type Key = Base & {
   secret?: string,
   secret_truncated: string,
   key_onetime?: string,
+};
+
+export type K2T = {
+  key: Pick<Key, "scopes">,
+  token: string,
 };
 
 export type LLM = {
@@ -120,5 +119,6 @@ export type MessageContent = (
 
 export type Message = Base & {
   role: "user" | "assistant" | "system",
-  content: MessageContent[]
+  content: MessageContent[],
+  chat: string,
 };

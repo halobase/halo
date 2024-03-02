@@ -41,7 +41,7 @@
     {#if op}
       <OA3Operation {op} {root} />
     {:else}
-      <div class="flex flex-col gap-4 grow">
+      <div class="grid gap-4 grow">
         <span class="skeleton w-1/5 h-12" />
         <span class="skeleton h-8" />
         <span class="skeleton" />
@@ -53,7 +53,7 @@
       {#if op}
         <Example {op} />
       {:else}
-        <div class="flex flex-col gap-4">
+        <div class="grid gap-4">
           <div class="skeleton h-32"></div>
           <div class="skeleton h-56"></div>
         </div>

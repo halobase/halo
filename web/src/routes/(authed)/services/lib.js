@@ -4,7 +4,7 @@ export function get_tags(services) {
   /** @type {Set<string>} */
   const S = new Set();
   for (const { schema } of services) {
-    for (const { name } of schema.tags ?? []) {
+    for (const { name } of schema?.tags ?? []) {
       S.add(name);
     }
   }

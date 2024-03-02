@@ -16,7 +16,7 @@
 <div class="intro intro-2xl grow">
   <div class="flex flex-col gap-6">
     <div>
-      <h2>Request</h2>
+      <h2>请求</h2>
       <div class="flex flex-col gap-6">
         {#if params}
           <OA3Parameters {params} {root} />

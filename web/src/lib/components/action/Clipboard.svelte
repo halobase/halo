@@ -3,13 +3,13 @@
   export let style = "input";
   export let value = "";
 
-  let text = "Copy";
+  let text = "复制";
 
   async function __click() {
     await navigator.clipboard.writeText(value);
-    text = "Copied";
+    text = "已复制";
     setTimeout(() => {
-      text = "Copy";
+      text = "复制";
     }, 2000);
   }
 </script>

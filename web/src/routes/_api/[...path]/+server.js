@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 
 export const GET = handle;
 export const POST = handle;
@@ -6,7 +6,9 @@ export const DELETE = handle;
 export const PUT = handle;
 export const PATCH = handle;
 
-const base_url = PUBLIC_API_URL;
+const base_url = env.PUBLIC_API_URL;
+
+console.log("Using env.PUBLIC_API_URL:", env.PUBLIC_API_URL);
 
 /** @param {import("./$types").RequestEvent} event  */
 async function handle(event) {

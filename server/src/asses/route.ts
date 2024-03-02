@@ -6,7 +6,7 @@ import { OpenAPIObject, RequestBodyObject } from "openapi3-ts/oas30";
 import { openai } from "@lib/openai";
 import { surreal } from "@lib/surreal";
 import { $create, $delete, $get, $list, $query, $update } from "./$";
-import type { Assistant, LLM, Message, MessageContent } from "@lib/types";
+import type { Assistant, LLM, Message, MessageContent, Service } from "@lib/types";
 
 
 const app = new OpenAPIHono();
@@ -19,7 +19,11 @@ function normalize(cs: MessageContent[]): string {
     switch (c.type) {
       case "text": text += c.text; break;
       case "file_url":
-        text += `\n${c.file_url.url}`; break;
+        text += `
+图片链接：${c.file_url.url}
+图片类型：${c.file_url.mime_type}
+图片大小：${c.file_url.size} 字节`;
+        break;
     }
   }
   return text;
@@ -36,29 +40,29 @@ function normalize_messages(msgs: Message[]): ChatCompletionMessageParam[] {
 app.openapi($query, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
-  const { services, knowledge, llm, options } = init;
+  const { 
+    services: service_ids, 
+    knowledge, 
+    llm, 
+    options 
+  } = init;
 
   let tools: Array<ChatCompletionTool> | undefined;
 
-  if (!options.retrieval && services) {
-    const [schemas] = await surreal.query<OpenAPIObject[]>(
-      `select value schema from service where id inside $services`,
-      { services },
-      auth.token
+  if (!options.retrieval && service_ids) {
+    const [services] = await surreal.query<Service[]>(
+      `select tools from service where id inside $service_ids`,
+      { service_ids },
+      auth.token,
     );
-    tools = schemas.map((v, i) => {
-      const endpoint = v.paths["/"];
-      const requestBody = endpoint.post?.requestBody as RequestBodyObject;
-      const schama = requestBody.content["application/json"].schema;
-      return {
-        type: "function",
-        function: {
-          name: services[i].slice("service:".length),
-          description: endpoint.description,
-          parameters: schama as Record<string, unknown>
+    tools = [];
+    for (const s of services) {
+      if (s.tools) {
+        for (const t of s.tools) {
+          tools.push(t);
         }
       }
-    });
+    }
   }
 
   if (options.retrieval && knowledge) {
@@ -73,8 +77,6 @@ app.openapi($query, async (ctx) => {
       }
     });
   }
-
-  console.log(tools);
 
   const messages = normalize_messages(init.messages as Message[]);
 
@@ -119,7 +121,7 @@ async function stream_tool_calls(
   stream: SSEStreamingApi,
   messages: Array<ChatCompletionMessageParam>,
   tool_calls: Array<ChatCompletionChunk.Choice.Delta.ToolCall>,
-  knowledge: string | undefined,
+  knowledge: string | undefined
 ) {
   let tools: Array<ChatCompletionTool> | undefined;
   if (knowledge) {
@@ -132,13 +134,16 @@ async function stream_tool_calls(
     }];
   }
 
+  console.log(tool_calls);
+
   for (const tool_call of tool_calls) {
     const { name, arguments: args } = tool_call.function!;
-    const url = `${new URL(ctx.req.url).origin}/services/service:${name}/fetch`;
+    const [service, endpoint] = name?.split("::") ?? [];
+    const url = `${new URL(ctx.req.url).origin}/services/${service}/fetch/${endpoint}`;
     const req = new Request(url, {
       method: "POST",
       headers: ctx.req.raw.headers,
-      body: args
+      body: args,
     });
 
     const body = await fetch(req).then(res => res.text());

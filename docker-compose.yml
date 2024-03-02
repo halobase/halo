@@ -1,13 +1,17 @@
 version: '3'
 services:
-  halo-surreal:
-    image: surrealdb/surrealdb
-    entrypoint: surreal start --log warn --auth file:/data/surrealdb
+  surreal:
+    image: surrealdb/surrealdb:latest
+    entrypoint: /surreal start --log warn --auth file:/data/surrealdb
+    volumes:
+      - data:/data
 
-  halo-server:
+  server:
     image: mivinci/halo-server:latest
     ports:
       - 23003:3000
+    depends_on:
+      - surrealdb
     environment:
       - TOKEN_SECRET=${TOKEN_SECRET}
 
@@ -24,3 +28,11 @@ services:
       - COS_SECRET_KEY=${COS_SECRET_KEY}
       - COS_REGION=${COS_REGION}
       - COS_BUCKET=${COS_BUCKET}
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data
+      o: bind

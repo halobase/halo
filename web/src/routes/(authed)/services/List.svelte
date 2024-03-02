@@ -9,13 +9,13 @@
       <div class="text-2xl md:text-3xl">{icon}</div>
       <div class="intro">
         <h3>
-          <a class="hover:text-alpha-400" href="/services/{id}/readme">
-            {schema.info.title}
+          <a class="hover:text-alpha-400" href="/services/{id}/docs">
+            {schema?.info.title ?? "未命名模型"}
           </a>
         </h3>
-        <p>{schema.info.description ?? "-"}</p>
+        <p>{schema?.info.description ?? "-"}</p>
         <div class="flex gap-2 flex-wrap">
-          {#each schema.tags ?? [] as { name }}
+          {#each schema?.tags ?? [] as { name }}
             <span class="badge text-xs">{name}</span>
           {/each}
         </div>

@@ -60,9 +60,9 @@
 <div>
   <FilePreview />
   <form class="contents mt-2" on:submit|preventDefault={__submit}>
-    <div class="flex items-center justify-between gap-4 py-2">
+    <div class="flex items-center justify-between gap-4 my-2">
       <Controller />
-      <button class="btn btn-alpha" type="submit" {disabled}>发送</button>
+      <button class="btn btn-alpha btn-sm" type="submit" {disabled}>发送</button>
     </div>
     <textarea
       class="block input p-2 h-10 sm:h-20 sb sb-sm"

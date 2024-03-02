@@ -1,4 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { stats } from "@lib/stats";
 import { auth } from "@lib/auth";
 import { $zen } from "./$";
 import { logger } from "hono/logger";
@@ -12,6 +13,7 @@ import services from "./services/route";
 import assistants from "./asses/route";
 import chats from "./chats/route";
 import files from "./files/route";
+
 
 const version = "1.0.0";
 
@@ -50,23 +52,27 @@ app.openapi($zen, (ctx) => {
 app.doc("/schema", (ctx) => ({
   openapi: "3.0.3",
   info: {
-    title: "HaloZ",
+    title: "Halo API",
     version,
     description: `
 `
   },
   servers: [{
-    url: new URL(ctx.req.url).origin,
+    url: "https://api.halo.archivemodel.cn",
   }]
 }));
 
 
 app.route("/iam", iam);
 
-app.use("/*", auth({
-  cookie: "hz-token",
-  secret: async (ctx) => env.TOKEN_SECRET!,
-}));
+app.use("/*", 
+  auth({
+    cookie: "hz-token",
+    apikey: "x-api-key",
+    secret: async (ctx) => env.TOKEN_SECRET!,
+  }), 
+  stats()
+);
 
 app.route("/user", user);
 app.route("/keys", keys);

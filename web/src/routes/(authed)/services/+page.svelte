@@ -12,13 +12,13 @@
 
   __query.subscribe(function ({ keyword, tags }) {
     let S = all.filter(function ({ schema }) {
-      return keyword ? schema.info.title.includes(keyword) : true;
+      return keyword ? schema?.info.title.includes(keyword) : true;
     });
     // TODO: use bitwise operations
     S = S.filter(function ({ schema }) {
       if (!tags || !tags.length) return true;
-      if (tags.length > (schema.tags?.length ?? 0)) return false;
-      const B = schema.tags ?? [];
+      if (tags.length > (schema?.tags?.length ?? 0)) return false;
+      const B = schema?.tags ?? [];
       return union ? filter_union(tags, B) : filter_intersect(tags, B);
     });
     services = S;
@@ -26,8 +26,8 @@
 </script>
 
 <svelte:head>
-  <title>数字模型 \ Halo</title>
-  <meta name="description" content="数字模型 \ Halo " />
+  <title>数字模型 | 精准农业数字模型 AI 服务平台</title>
+  <meta name="description" content="数字模型 | 精准农业数字模型 AI 服务平台 " />
 </svelte:head>
 
 <div class="drawer drawer-r drawer-s-2xl">

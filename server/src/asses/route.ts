@@ -9,7 +9,9 @@ import { $create, $delete, $get, $list, $query, $update } from "./$";
 import type { Assistant, LLM, Message, MessageContent, Service } from "@lib/types";
 
 
-const app = new OpenAPIHono();
+const app = new OpenAPIHono({
+  
+});
 
 const model = "glm-3-turbo";
 

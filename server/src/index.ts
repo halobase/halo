@@ -59,9 +59,19 @@ app.doc("/schema", (ctx) => ({
   },
   servers: [{
     url: "https://api.halo.archivemodel.cn",
-  }]
+  }],
 }));
 
+app.openAPIRegistry.registerComponent("securitySchemes", "api_token", {
+  type: "http",
+  scheme: "bearer",
+});
+
+app.openAPIRegistry.registerComponent("securitySchemes", "api_key", {
+  type: "apiKey",
+  name: "X-API-Key",
+  in: "header",
+});
 
 app.route("/iam", iam);
 

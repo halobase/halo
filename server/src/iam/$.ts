@@ -19,11 +19,11 @@ export const $Token = z.object({
 export const $token = createRoute({
   method: "post",
   path: "/token",
-  summary: "Apply for a token",
-  description: "Apply for a token. Can be used as sign-in or sign-up.",
-  operationId: "iam-token",
+  summary: "Apply for a bearer token",
+  description: "Apply for a bearer token. Can be used as sign-in or sign-up.",
+  operationId: "auth-token",
   tags: [
-    "IAM"
+    "Auth"
   ],
   request: {
     body: {

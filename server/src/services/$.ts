@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { $base, $openapi } from "@lib/$";
+import { $base } from "@lib/$";
 
 
 export const $ServiceInit = z.object({
@@ -36,6 +36,10 @@ export const $list = createRoute({
   operationId: "services-list-services",
   tags: [
     "Services"
+  ],
+  security: [
+    {"api_key": []},
+    {"api_token": []},
   ],
   responses: {
     200: {
@@ -90,7 +94,7 @@ export const $schema = createRoute({
       description: "The OpenAPI v3.0.3 schema object.",
       content: {
         "application/json": {
-          schema: $openapi,
+          schema: z.object({}, {description: "OpenAPI v3.0.3 object."}),
         }
       }
     }

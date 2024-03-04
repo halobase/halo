@@ -13,7 +13,7 @@
     {@const href = `/assistants/${assistant.id}/chats/${chat.id}`}
     <div class="card intro intro-xl px-4 py-2">
       <div class="flex justify-between">
-        <a class="hover:underline" {href}><h2>{chat.summary}</h2></a>
+        <a class="hover:underline" {href}><h3>{chat.summary}</h3></a>
         <div>
           <button class="btn btn-sm btn-ghost btn-square" type="button">
             <Icon icon="edit" />

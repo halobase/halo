@@ -3,12 +3,13 @@
   import Level from "./Level.svelte";
   import Readme from "./Readme.svelte";
   import Schema from "./Schema.svelte";
+  import Suggestions from "./Suggestions.svelte";
 
   export let data;
 </script>
 
 <main class="container container-md">
-  <div></div>
+  <Suggestions service={data.service} nodes={data.nodes} />
   <Readme service={data.service} />
   <Schema service={data.service} />
   <div class="intro intro-xl">

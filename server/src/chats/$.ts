@@ -30,9 +30,9 @@ export const $list = createRoute({
   path: "/",
   summary: "List chats",
   description: "List all chats you have ownership or verfied access to.",
-  operationId: "chats-list-chats",
+  operationId: "chat-list",
   tags: [
-    "Chats"
+    "Chat"
   ],
   request: {
     query: $ChatQuery,
@@ -54,9 +54,9 @@ export const $create = createRoute({
   path: "/",
   summary: "Create a chat",
   description: "Create a chat.",
-  operationId: "chats-create-chat",
+  operationId: "chat-create",
   tags: [
-    "Chats"
+    "Chat"
   ],
   request: {
     body: {
@@ -85,9 +85,9 @@ export const $update = createRoute({
   path: "/{id}",
   summary: "Update a chat",
   description: "Update a chat.",
-  operationId: "chats-update-chat",
+  operationId: "chat-update",
   tags: [
-    "Chats"
+    "Chat"
   ],
   request: {
     params: $ChatPathParam,
@@ -117,9 +117,9 @@ export const $delete = createRoute({
   path: "/{id}",
   summary: "Delete a chat",
   description: "Delete a chat you have ownership or verfied access to.",
-  operationId: "chats-delete-chat",
+  operationId: "chat-delete",
   tags: [
-    "Chats",
+    "Chat",
   ],
   request: {
     params: $ChatPathParam,
@@ -136,9 +136,9 @@ export const $get = createRoute({
   path: "/{id}",
   summary: "Get a chat",
   description: "Get a chat.",
-  operationId: "chats-get-chat",
+  operationId: "chat-get",
   tags: [
-    "Chats"
+    "Chat"
   ],
   responses: {
     200: {
@@ -157,9 +157,9 @@ export const $list_massages = createRoute({
   path: "/{id}/messages",
   summary: "List messages",
   description: "List all messages sent during a chats",
-  operationId: "chats-list-messages",
+  operationId: "chat-list-messages",
   tags: [
-    "Chats"
+    "Chat"
   ],
   request: {
     params: $ChatPathParam,
@@ -181,9 +181,9 @@ export const $create_message = createRoute({
   path: "/{id}/messages",
   summary: "Create a message",
   description: "Create a message to a chats",
-  operationId: "chats-create-message",
+  operationId: "chat-create-message",
   tags: [
-    "Chats"
+    "Chat"
   ],
   request: {
     params: $ChatPathParam,

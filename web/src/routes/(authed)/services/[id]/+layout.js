@@ -1,9 +1,19 @@
 export async function load(event) {
-  /** @type {import("$lib/types").Service} */
-  const service = await event.fetch(`/_api/services/${event.params.id}`)
-    .then(res => res.json());
-  
+  const id = event.params.id;
+  /** 
+   * @type {[
+   *   import("$lib/types").Service,
+   *   import("$lib/types").Node[]
+   * ]} 
+   */
+  const [service, nodes] = await Promise.all([
+    event.fetch(`/_api/services/${id}`)
+      .then(res => res.json()),
+    event.fetch(`/_api/services/${id}/nodes`)
+      .then(res => res.json()),
+  ]);
   return {
     service,
+    nodes,
   }
 }

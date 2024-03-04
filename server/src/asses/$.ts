@@ -41,11 +41,11 @@ export const $AssistantPathParam = z.object({
 export const $query = createRoute({
   method: "post",
   path: "/query",
-  summary: "Question answering",
-  description: "Question answering with optional services or documents.",
-  operationId: "assistants-query",
+  summary: "Generate",
+  description: "Generate outputs with optional services or knowledge.",
+  operationId: "assistant-query",
   tags: [
-    "Assistants"
+    "Assistant"
   ],
   request: {
     body: {
@@ -77,9 +77,9 @@ export const $create = createRoute({
   path: "/",
   summary: "Create an assistant",
   description: "Create an assistant.",
-  operationId: "assistants-create-assistant",
+  operationId: "assistant-create",
   tags: [
-    "Assistants"
+    "Assistant"
   ],
   request: {
     body: {
@@ -110,9 +110,9 @@ export const $list = createRoute({
   path: "/",
   summary: "List assistants",
   description: "List all assistants you have ownership or verfied access to.",
-  operationId: "assistants-list-assistants",
+  operationId: "assistant-list",
   tags: [
-    "Assistants"
+    "Assistant"
   ],
   responses: {
     200: {
@@ -131,9 +131,9 @@ export const $get = createRoute({
   path: "/{id}",
   summary: "Get an assistant",
   description: "Get an assistant.",
-  operationId: "assistants-get-assistant",
+  operationId: "assistant-get",
   tags: [
-    "Assistants"
+    "Assistant"
   ],
   request: {
     params: $AssistantPathParam,
@@ -155,9 +155,9 @@ export const $update = createRoute({
   path: "/{id}",
   summary: "Update an assistant",
   description: "Update an assistant.",
-  operationId: "assistants-update-assistant",
+  operationId: "assistant-update",
   tags: [
-    "Assistants"
+    "Assistant"
   ],
   request: {
     params: $AssistantPathParam,
@@ -187,9 +187,9 @@ export const $delete = createRoute({
   path: "/{id}",
   summary: "Delete an assistant",
   description: "Delete an assistant you have ownership or verfied access to.",
-  operationId: "assistants-delete-assistant",
+  operationId: "assistant-delete",
   tags: [
-    "Assistants",
+    "Assistant",
   ],
   request: {
     params: $AssistantPathParam,

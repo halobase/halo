@@ -22,9 +22,9 @@ export const $list = createRoute({
   path: "/",
   summary: "List keys",
   description: "List all keys.",
-  operationId: "keys-list-keys",
+  operationId: "key-list",
   tags: [
-    "Keys"
+    "Key"
   ],
   responses: {
     200: {
@@ -43,7 +43,10 @@ export const $post = createRoute({
   path: "/",
   summary: "Create a key",
   description: "Create a Key.",
-  operationId: "create-key",
+  operationId: "key-create",
+  tags: [
+    "Key"
+  ],
   request: {
     body: {
       description: "The Key object",
@@ -71,7 +74,10 @@ export const $delete = createRoute({
   path: "/{id}",
   summary: "Revoke a key",
   description: "Revoke a key.",
-  operationId: "revoke-api-key",
+  operationId: "key-revoke",
+  tags: [
+    "Key"
+  ],
   request: {
     params: z.object({
       id: z.string(),

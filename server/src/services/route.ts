@@ -84,16 +84,11 @@ app.openapi($create_node, async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.param();
   const init = ctx.req.valid("json");
-  const node_id = init.id.startsWith("node:") ? init.id : `node:${init.id}`;
-  init.id = node_id;
-  const [[node]] = await surreal.query<Node[]>(
-    `update $id merge $init`,
+  const [node] = await surreal.create<Node>(
+    `node`,
     {
-      id: node_id,
-      init: {
-        ...init,
-        service: id,
-      }
+      ...init,
+      service: id,
     },
     auth.token,
   );

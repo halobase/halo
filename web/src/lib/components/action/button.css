@@ -55,6 +55,22 @@
     @apply hover:bg-opacity-20;
   }
 
+  .btn-debug.btn-light {
+    @apply bg-debug-400 hover:bg-opacity-30 bg-opacity-20;
+  }
+  
+  .btn-info.btn-light {
+    @apply bg-info-400 hover:bg-opacity-30 bg-opacity-20;
+  }
+
+  .btn-warn.btn-light {
+    @apply bg-warn-400 hover:bg-opacity-30 bg-opacity-20;
+  }
+
+  .btn-error.btn-light {
+    @apply bg-error-400 hover:bg-opacity-30 bg-opacity-20;
+  }
+
   /* ghost */
 
   .btn-ghost {
@@ -88,7 +104,7 @@
   /* shape */
 
   .btn-square {
-    @apply p-2;
+    @apply p-1.5;
   }
 
   .btn-square.btn-sm {

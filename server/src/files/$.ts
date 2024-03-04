@@ -33,9 +33,9 @@ export const $create_presigned_url = createRoute({
   path: "/pre-signed-url",
   summary: "Create a pre-signed URL",
   description: "Create a pre-signed URL",
-  operationId: "files-create-pre-signed-url",
+  operationId: "file-create-pre-signed-url",
   tags: [
-    "Files"
+    "File"
   ],
   request: {
     body: {
@@ -64,9 +64,9 @@ export const $create = createRoute({
   path: "/",
   summary: "Create a file",
   description: "Create a file",
-  operationId: "files-create-file",
+  operationId: "file-create",
   tags: [
-    "Files"
+    "File"
   ],
   request: {
     body: {
@@ -95,9 +95,9 @@ export const $delete = createRoute({
   path: "/{id}",
   summary: "Delete a file",
   description: "Delete a file",
-  operationId: "files-delete-file",
+  operationId: "file-delete",
   tags: [
-    "Files"
+    "File"
   ],
   request: {
     params: $FilePathParam,

@@ -20,6 +20,7 @@ export const actions = {
     const readme = get(form, "readme");
     if (readme)
       update = { ...update, readme };
+
     const level = +get(form, "level");
     update = { ...update, level };
 

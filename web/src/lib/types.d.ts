@@ -48,8 +48,14 @@ export type Schema = OpenAPIObject;
 
 export type Service = Base & {
   level?: number,
+  current?: string,
   readme?: string,
   schema: Schema,
+};
+
+export type Node = Base & {
+  url: string,
+  tags: Array<string>,
 };
 
 export type Operation = OperationObject & {

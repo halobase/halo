@@ -1,12 +1,4 @@
 /**
- * @param {any} [obj] 
- */
-export function isref(obj) {
-  if (!obj) return false;
-  return "$ref" in obj;
-}
-
-/**
  * @template {import("./types").DereffableObject} T
  * @param {string} ref 
  * @param {any} [root] 
@@ -23,10 +15,11 @@ export function deref(ref, root) {
 
 /**
  * @template {import("./types").DereffableObject} T
- * @param {any} obj 
+ * @param {T | import("openapi3-ts/oas30").ReferenceObject} [obj] 
  * @param {any} [root] 
  * @returns {T=}
  */
 export function deref_if_needed(obj, root) {
-  return isref(obj) ? deref(obj.$ref, root) : obj;
+  if (!obj) return obj;
+  return "$ref" in obj ? deref(obj.$ref, root) : obj;
 }

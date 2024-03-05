@@ -4,11 +4,11 @@
 
   /** @type {import("openapi3-ts/oas30").OperationObject["requestBody"]} */
   export let body;
-  /** @type {any} */
+  /** @type {import("openapi3-ts/oas30").OpenAPIObject} */
   export let root;
 
   /** @type {import("openapi3-ts/oas30").RequestBodyObject | undefined} */
-  $: body_dereffed = deref_if_needed(body);
+  $: body_dereffed = deref_if_needed(body, root);
   $: entries = Object.entries(body_dereffed?.content ?? {});
   $: selected = entries.length > 0 ? entries[0][0] : undefined;
 </script>

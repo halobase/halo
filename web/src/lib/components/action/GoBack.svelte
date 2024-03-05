@@ -25,5 +25,5 @@
       d="m15 6l-6 6l6 6"
     />
   </svg>
-  <span class="hidden sm:inline-block mx-1 font-semibold">{title}</span>
+  <span class="hidden sm:inline-block ml-1 mr-2 font-semibold">{title}</span>
 </button>

@@ -67,7 +67,7 @@
     <textarea
       class="block input p-2 h-10 sm:h-20 sb sb-sm"
       placeholder="Enter 发送, Shift + Enter 换行"
-      on:keypress={debounce(__keypress, 200)}
+      on:keypress|preventDefault={debounce(__keypress, 200)}
       bind:value
     />
   </form>

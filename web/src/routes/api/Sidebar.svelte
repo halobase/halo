@@ -1,4 +1,5 @@
 <script>
+  import { GoBack } from "$lib";
   import Menu from "./Menu.svelte";
 
   /** @type {import("$lib/types").SchemaGrouped} */
@@ -6,4 +7,9 @@
   const { groups } = schema;
 </script>
 
-<Menu {groups} />
+<div class="grid gap-4">
+  <div>
+    <GoBack />
+  </div>
+  <Menu {groups} />
+</div>

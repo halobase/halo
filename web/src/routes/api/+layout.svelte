@@ -1,12 +1,13 @@
 <script>
   import { SidebarApp } from "$lib";
-  import { onMount } from "svelte";
-  import { fetch_and_group_schema } from "./lib";
+  import { group } from "./lib";
   import { schema } from "./store";
+  import { onMount } from "svelte";
   import Sidebar from "./Sidebar.svelte";
+  export let data;
 
-  onMount(async function () {
-    schema.set(await fetch_and_group_schema());
+  onMount(async () => {
+    schema.set(await group(data.schema));
   });
 </script>
 

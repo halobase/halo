@@ -26,8 +26,8 @@
 </script>
 
 <svelte:head>
-  <title>数字模型 | 精准农业数字模型 AI 服务平台</title>
-  <meta name="description" content="数字模型 | 精准农业数字模型 AI 服务平台 " />
+  <title>数字模型</title>
+  <meta name="description" content="数字模型" />
 </svelte:head>
 
 <div class="drawer drawer-r drawer-s-2xl">

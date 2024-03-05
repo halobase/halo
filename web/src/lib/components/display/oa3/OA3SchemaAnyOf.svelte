@@ -4,7 +4,7 @@
 
   /** @type {import("openapi3-ts/oas30").MediaTypeObject["schema"][]} */
   export let anyOf;
-  /** @type {any} */
+  /** @type {import("openapi3-ts/oas30").OpenAPIObject} */
   export let root;
   $: schemas = anyOf.map((a) => deref_if_needed(a, root));
   $: selected = 0;

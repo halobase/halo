@@ -2,7 +2,7 @@
   import { afterUpdate } from "svelte";
   import Content from "./Content.svelte";
   import Completion from "./Completion.svelte";
-    import { __messages } from "./store";
+  import { __messages } from "./store";
 
   /** @type {string} */
   export let url;
@@ -46,11 +46,13 @@
         class:self-end={should_align_right(role, align)}
         class:flex-row-reverse={should_align_right(role, align)}
       >
-        {#if role === "assistant"}
-          <div class="text-3xl">😇</div>
-        {:else}
-          <div class="text-3xl">🙂</div>
-        {/if}
+        <div class="text-2xl sm:text-3xl">
+          {#if role === "assistant"}
+            😇
+          {:else}
+            🙂
+          {/if}
+        </div>
         <div
           class="bubble mt-1"
           class:bubble-l={role === "assistant"}
@@ -64,7 +66,7 @@
     {/if}
     {@const n = $__messages.length}
     {#if i === n - 1 && role === "user"}
-      <li class="w-3/4 flex gap-2 mb-2">
+      <li class="w-5/6 flex gap-2 mb-2">
         <div class="text-3xl">😇</div>
         <Completion {url} on:stop />
       </li>

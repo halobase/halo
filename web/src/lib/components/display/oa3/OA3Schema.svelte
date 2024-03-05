@@ -4,10 +4,9 @@
 
   /** @type {import("openapi3-ts/oas30").MediaTypeObject["schema"]} */
   export let schema;
-  /** @type {any} */
+  /** @type {import("openapi3-ts/oas30").OpenAPIObject} */
   export let root;
 
-  /** @type {import("openapi3-ts/oas30").SchemaObject | undefined} */
   $: schema_dereffed = deref_if_needed(schema, root);
   $: required = schema_dereffed?.required ?? [];
   $: type = schema_dereffed?.type;

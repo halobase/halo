@@ -1,15 +1,14 @@
-import { sleep } from "$lib/utils/time";
-
 const allow_methods = ["get", "post", "delete", "put", "patch"];
 
-/** @returns {Promise<import("$lib/types").SchemaGrouped>} */
-export async function fetch_and_group_schema() {
+/** 
+ * @param {import("$lib/types").OpenAPI} schema
+ * @returns {Promise<import("$lib/types").SchemaGrouped>} 
+ */
+export async function group(schema) {
   /** @type {Record<string, Array<import("$lib/types").Operation>>} */
   const groups = {};
   /** @type {Record<string, import("$lib/types").Operation>} */
   const endpoints = {};
-  /** @type {import("$lib/types").Schema} */
-  const schema = await fetch("/_api/schema").then((res) => res.json());
 
   Object.entries(schema.paths).forEach(function ([path, path_object]) {
     Object.entries(path_object).forEach(function ([method, operation]) {
@@ -27,7 +26,6 @@ export async function fetch_and_group_schema() {
       }
     });
   });
-  await sleep(1000);
   return {
     ...schema,
     groups,

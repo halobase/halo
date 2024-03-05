@@ -14,7 +14,7 @@ export async function load(event) {
     },
     {
       "id": "assistants",
-      "name": "数字农艺专家",
+      "name": "数字专家",
       "icon": "🙂",
       "group": ""
     },

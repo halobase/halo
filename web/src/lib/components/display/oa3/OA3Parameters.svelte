@@ -4,7 +4,7 @@
 
   /** @type {import("openapi3-ts/oas30").OperationObject["parameters"]} */
   export let params;
-  /** @type {any} */
+  /** @type {import("openapi3-ts/oas30").OpenAPIObject} */
   export let root;
 
   $: groups = groupby(params ?? [], function (p) {

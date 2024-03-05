@@ -1,7 +1,6 @@
 <script>
-  import { OA3Operation } from "$lib";
+  import { OA3Example, OA3Operation } from "$lib";
   import { schema } from "../../store";
-  import Example from "./Example.svelte";
 
   export let data;
   $: id = data.id;
@@ -38,7 +37,7 @@
     {/if}
   </header>
   <main class="flex flex-col lg:flex-row gap-8 2xl:gap-16 items-stretch">
-    {#if op}
+    {#if op && root}
       <OA3Operation {op} {root} />
     {:else}
       <div class="grid gap-4 grow">
@@ -50,8 +49,8 @@
       </div>
     {/if}
     <aside class="w-full lg:w-1/2 2xl:w-2/5 self-start sticky top-8">
-      {#if op}
-        <Example {op} />
+      {#if op && root}
+        <OA3Example {op} {root} title="代码示例" />
       {:else}
         <div class="grid gap-4">
           <div class="skeleton h-32"></div>

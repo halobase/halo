@@ -44,13 +44,13 @@ export type Key = Base & {
   key_onetime?: string,
 };
 
-export type Schema = OpenAPIObject;
+export type OpenAPI = OpenAPIObject;
 
 export type Service = Base & {
   level?: number,
   current?: string,
   readme?: string,
-  schema: Schema,
+  schema: OpenAPI,
 };
 
 export type Node = Base & {
@@ -63,7 +63,7 @@ export type Operation = OperationObject & {
   path: string,
 }
 
-export type SchemaGrouped = Schema & {
+export type SchemaGrouped = OpenAPI & {
   groups: Record<string, Array<Operation>>,
   operations: Record<string, Operation>,
 };

@@ -8,9 +8,7 @@
     数字模型
   </svelte:fragment>
   <svelte:fragment slot="intro">
-    <p>
-      我们针对不同作物提供不同的模型服务，一次调用的费用为模型单价乘该次调用的请求数据大小。
-    </p>
+    <p></p>
   </svelte:fragment>
   <svelte:fragment>
     <New />

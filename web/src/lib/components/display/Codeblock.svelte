@@ -1,4 +1,5 @@
 <script>
+  import { notify } from "../notify";
   import { highlight } from "./stores";
 
   /** @type {string} */
@@ -6,14 +7,21 @@
   /** @type {import("./types").Code[]} */
   export let codes;
 
-  let selected = codes[0].lang;
+  let selected = 0;
 </script>
 
-<div class="card">
+<div class="card w-full overflow-x-auto">
   <header>
     <h6 class="text-sm font-semibold">{title}</h6>
     <div class="flex gap-2">
-      <button class="btn btn-sm btn-square btn-light py-0 h-7" type="button">
+      <button
+        class="btn btn-sm btn-square btn-light py-0 h-7"
+        type="button"
+        on:click={async () => {
+          await navigator.clipboard.writeText(codes[selected].content);
+          notify({ message: "已复制" });
+        }}
+      >
         <svg class="w-5 h-5" viewBox="0 0 24 24">
           <g
             fill="none"
@@ -32,8 +40,8 @@
         </svg>
       </button>
       <select class="select w-fit h-7 py-0 pr-8" bind:value={selected}>
-        {#each codes as { lang }}
-          <option value={lang}>{lang}</option>
+        {#each codes as { lang }, i}
+          <option value={i}>{lang}</option>
         {/each}
       </select>
     </div>
@@ -41,10 +49,15 @@
   {#each codes as { lang, content }}
     <div
       class="p-2 text-[13px] font-[18px] overflow-x-auto sb-none"
-      class:hidden={lang !== selected}
+      class:hidden={lang !== codes[+selected].lang}
     >
       {#if $highlight}
-        <pre><code>{@html $highlight({ lang, content })}</code></pre>
+        <pre><code
+            >{@html $highlight({
+              lang: lang.split("/")[0].trim(),
+              content
+            })}</code
+          ></pre>
       {:else}
         <pre><code>{content}</code></pre>
       {/if}

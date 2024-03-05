@@ -3,7 +3,7 @@
 
   /** @type {import("openapi3-ts/oas30").OperationObject["responses"]} */
   export let responses;
-  /** @type {any} */
+  /** @type {import("openapi3-ts/oas30").OpenAPIObject} */
   export let root;
 
   $: entries = Object.entries(responses);

@@ -18,7 +18,7 @@
   <a class="text-nowrap" href="/">
     <h1 class="text-3xl font-extrabold flex gap-2 items-center">
       <img class="h-8 w-10" src={Logo} alt="">
-      <span class="hidden sm:block">Halo</span>
+      <span class="hidden sm:block">农业 AI 服务</span>
     </h1>
   </a>
 </div>

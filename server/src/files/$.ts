@@ -2,31 +2,56 @@ import { createRoute } from "@hono/zod-openapi";
 import { $base } from "@lib/$";
 import { z } from "zod";
 
-export const $FileInit = z.object({
-  type: z.string({ description: "File MIME type." }),
-  name: z.string({ description: "File name." }),
-  size: z.number({ description: "File size in bytes." }),
-  object_key: z.string({ description: "Object storage key." }),
-}).openapi("FileInit");
+export const $FileInit = z
+  .object({
+    type: z.string({ description: "File MIME type." }),
+    name: z.string({ description: "File name." }),
+    size: z.number({ description: "File size in bytes." }),
+    object_key: z.string({ description: "Object storage key." })
+  })
+  .openapi("FileInit");
 
-export const $PresignedURLInit = z.object({
-  name: z.string({ description: "File name." }),
-  method: z.enum(["GET", "PUT"], { description: "Method allowed when using the pre-signed URL." }),
-}).openapi("PresignedURLInit");
+export const $PresignedURLInit = z
+  .object({
+    name: z.string({ description: "File name." }),
+    method: z.enum(["GET", "PUT"], {
+      description: "Method allowed when using the pre-signed URL."
+    })
+  })
+  .openapi("PresignedURLInit");
 
-export const $PresignedURL = z.object({
-  object_key: z.string({ description: "Object storage key." }),
-  url: z.string({ description: "Pre-signed URL." }),
-}).openapi("PresignedURL");
+export const $PresignedURL = z
+  .object({
+    object_key: z.string({ description: "Object storage key." }),
+    url: z.string({ description: "Pre-signed URL." })
+  })
+  .openapi("PresignedURL");
 
-export const $File = $base.merge($FileInit.merge(z.object({
-  state: z.string({ description: "File state." }),
-  pre_signed_url: z.string({ description: "Pre-signed URL." }),
-}))).openapi("File");
+export const $File = $base
+  .merge(
+    $FileInit.merge(
+      z.object({
+        state: z.string({ description: "File state." }),
+        pre_signed_url: z.string({ description: "Pre-signed URL." })
+      })
+    )
+  )
+  .openapi("File");
 
-export const $FilePathParam = z.object({
-  id: z.string({ description: "File ID." }),
-}).openapi("FilePathParam");
+export const $FilePathParam = z
+  .object({
+    id: z.string({ description: "File ID." })
+  })
+  .openapi("FilePathParam");
+
+export const $FileURL = z
+  .object({
+    url: z.string({ description: "文件地址" }),
+    name: z.string({ description: "文件名" }),
+    mime_type: z.string({ description: "文件 MIME 类型" }),
+    size: z.number({ description: "文件大小" }).optional()
+  })
+  .openapi("FileURL");
 
 export const $create_presigned_url = createRoute({
   method: "post",
@@ -34,9 +59,7 @@ export const $create_presigned_url = createRoute({
   summary: "Create a pre-signed URL",
   description: "Create a pre-signed URL",
   operationId: "file-create-pre-signed-url",
-  tags: [
-    "File"
-  ],
+  tags: ["File"],
   request: {
     body: {
       content: {
@@ -44,7 +67,7 @@ export const $create_presigned_url = createRoute({
           schema: $PresignedURLInit
         }
       },
-      required: true,
+      required: true
     }
   },
   responses: {
@@ -52,11 +75,11 @@ export const $create_presigned_url = createRoute({
       description: "The PresignedURL object.",
       content: {
         "application/json": {
-          schema: $PresignedURL,
-        },
+          schema: $PresignedURL
+        }
       }
     }
-  },
+  }
 });
 
 export const $create = createRoute({
@@ -65,9 +88,7 @@ export const $create = createRoute({
   summary: "Create a file",
   description: "Create a file",
   operationId: "file-create",
-  tags: [
-    "File"
-  ],
+  tags: ["File"],
   request: {
     body: {
       content: {
@@ -75,7 +96,7 @@ export const $create = createRoute({
           schema: $FileInit
         }
       },
-      required: true,
+      required: true
     }
   },
   responses: {
@@ -83,11 +104,11 @@ export const $create = createRoute({
       description: "The File object.",
       content: {
         "application/json": {
-          schema: $File,
-        },
+          schema: $File
+        }
       }
     }
-  },
+  }
 });
 
 export const $delete = createRoute({
@@ -96,15 +117,13 @@ export const $delete = createRoute({
   summary: "Delete a file",
   description: "Delete a file",
   operationId: "file-delete",
-  tags: [
-    "File"
-  ],
+  tags: ["File"],
   request: {
-    params: $FilePathParam,
+    params: $FilePathParam
   },
   responses: {
     200: {
-      description: "Successfully deleted.",
+      description: "Successfully deleted."
     }
-  },
+  }
 });

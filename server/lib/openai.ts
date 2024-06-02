@@ -4,7 +4,7 @@ import { DAY } from "./time";
 import env from "./env";
 
 type Adapter = {
-  adapt: (c: OpenAI) => Promise<OpenAI>
+  adapt: (c: OpenAI) => Promise<OpenAI>;
 };
 
 class AdapterAuto implements Adapter {
@@ -36,16 +36,20 @@ class AdapterZhipuAI implements Adapter {
       exp: now + forever
     };
     const signer = new SignJWT(claims);
-    const token = await signer.setProtectedHeader({
-      alg: "HS256",
-      sign_type: "SIGN"
-    }).sign(new TextEncoder().encode(secret));
+    const token = await signer
+      .setProtectedHeader({
+        alg: "HS256",
+        sign_type: "SIGN"
+      })
+      .sign(new TextEncoder().encode(secret));
     return token;
   }
 }
 
 const adapter = new AdapterAuto();
-export const openai = await adapter.adapt(new OpenAI({
-  baseURL: env.OPENAI_URL,
-  apiKey: env.OPENAI_KEY,
-}));
+export const openai = await adapter.adapt(
+  new OpenAI({
+    baseURL: env.OPENAI_URL,
+    apiKey: env.OPENAI_KEY
+  })
+);

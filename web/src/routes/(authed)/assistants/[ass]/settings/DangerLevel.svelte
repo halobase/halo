@@ -1,15 +1,15 @@
 <script>
   import { Confirm, notify } from "$lib";
   import { levels } from "$lib/ac";
-  /** @type {import("$lib/types").Service} */
-  export let service;
+  /** @type {import("$lib/types").Assistant} */
+  export let assistant;
   let enable = false;
 </script>
 
 <div class="flex items-center justify-between px-3 py-2">
   <div class="intro">
     <h3>访问控制</h3>
-    <p>设置谁能访问到该模型</p>
+    <p>设置谁能访问到该专家</p>
   </div>
   <button class="btn btn-error" type="button" on:click={() => (enable = true)}>
     设置
@@ -18,7 +18,7 @@
 
 <Confirm
   bind:enable
-  action="/services/{service.id}?/update"
+  action="?/update&partial=danger"
   title="访问控制"
   confirm="保存"
   on:success={() => {
@@ -29,7 +29,7 @@
     enable = false;
   }}
 >
-  <p class="text-intro">选择谁能访问到模型：{service.schema?.info?.title}</p>
+  <p class="text-intro">选择谁能访问到专家：{assistant.name}</p>
   <div class="grid gap-2">
     {#each levels as { title, value }}
       <label class="radio radio-alpha p-2 text-center">
@@ -37,7 +37,7 @@
           type="radio"
           name="level"
           {value}
-          checked={value === service.level}
+          checked={value === assistant.level}
         />
         <span>{title}</span>
       </label>

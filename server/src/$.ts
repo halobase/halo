@@ -6,9 +6,7 @@ export const $zen = createRoute({
   summary: "Get the Zen of Halo",
   description: "Get the Zen of Halo.",
   operationId: "meta-zen",
-  tags: [
-    "Meta"
-  ],
+  tags: ["Meta"],
   responses: {
     200: {
       description: "Zen of Halo.",

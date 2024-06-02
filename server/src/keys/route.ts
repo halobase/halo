@@ -35,11 +35,11 @@ app.openapi($post, async (ctx) => {
         ...init,
         prefix,
         secret,
-        secret_truncated,
+        secret_truncated
       },
-      token_surrealdb,
+      token_surrealdb
     },
-    auth.token,
+    auth.token
   );
   key.key_onetime = `${prefix}-${key.id.slice("key:".length)}-${secret}`;
   return ctx.json(key);
@@ -54,15 +54,18 @@ app.openapi($delete, async (ctx) => {
 
 async function persistant_token(user: User) {
   const expiry = Date.now() + 356 * 100 * DAY; // 100 years is enough :)
-  return Jwt.sign({
-    iss: "halo.dev",
-    exp: Math.floor(expiry / 1000),
-    user,
-    ns: env.SURREAL_NS,
-    db: env.SURREAL_DB,
-    sc: user.scope ?? "user",
-    tk: "user",
-  }, env.TOKEN_SECRET!);
+  return Jwt.sign(
+    {
+      iss: "halo.dev",
+      exp: Math.floor(expiry / 1000),
+      user,
+      ns: env.SURREAL_NS,
+      db: env.SURREAL_DB,
+      sc: user.scope ?? "user",
+      tk: "user"
+    },
+    env.TOKEN_SECRET!
+  );
 }
 
 export default app;

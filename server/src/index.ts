@@ -10,19 +10,20 @@ import iam from "./iam/route";
 import user from "./user/route";
 import keys from "./keys/route";
 import services from "./services/route";
-import assistants from "./asses/route";
-import chats from "./chats/route";
+import assistants from "./assistants/route";
 import files from "./files/route";
-
 
 const version = "1.0.0";
 
 const app = new OpenAPIHono({
   defaultHook: (r, ctx) => {
     if (!r.success) {
-      return ctx.json({
-        message: r.error.toString()
-      }, 400);
+      return ctx.json(
+        {
+          message: r.error.toString()
+        },
+        400
+      );
     }
   }
 });
@@ -46,7 +47,7 @@ app.openapi($zen, (ctx) => {
  
  Have fun :)
 
-` );
+`);
 });
 
 app.doc("/schema", (ctx) => ({
@@ -57,30 +58,33 @@ app.doc("/schema", (ctx) => ({
     description: `
 `
   },
-  servers: [{
-    url: "https://api.halo.archivemodel.cn",
-  }],
+  servers: [
+    {
+      url: "https://api.halo.archivemodel.cn"
+    }
+  ]
 }));
 
 app.openAPIRegistry.registerComponent("securitySchemes", "api_token", {
   type: "http",
-  scheme: "bearer",
+  scheme: "bearer"
 });
 
 app.openAPIRegistry.registerComponent("securitySchemes", "api_key", {
   type: "apiKey",
   name: "X-API-Key",
-  in: "header",
+  in: "header"
 });
 
 app.route("/iam", iam);
 
-app.use("/*", 
+app.use(
+  "/*",
   auth({
     cookie: "hz-token",
     apikey: "x-api-key",
-    secret: async (ctx) => env.TOKEN_SECRET!,
-  }), 
+    secret: async (ctx) => env.TOKEN_SECRET!
+  }),
   stats()
 );
 
@@ -88,7 +92,6 @@ app.route("/user", user);
 app.route("/keys", keys);
 app.route("/services", services);
 app.route("/assistants", assistants);
-app.route("/chats", chats);
 app.route("/files", files);
 
 export default app;

@@ -10,6 +10,10 @@ export async function POST(event) {
       return Response.json({
         result: "李子"
       });
+    case "sys-time":
+      return Response.json({
+        result: new Date().toLocaleString()
+      });
     default:
       return Response.json({
         result: "无法识别该图片"

@@ -4,6 +4,9 @@
   import Completion from "./Completion.svelte";
   import { __messages } from "./store";
 
+  /** @type {import("$lib/types").Assistant} */
+  export let assistant;
+
   /** @type {string} */
   export let url;
 
@@ -48,7 +51,7 @@
       >
         <div class="text-2xl sm:text-3xl">
           {#if role === "assistant"}
-            😇
+            <a href="/assistants/{assistant.id}/settings">{assistant.icon}</a>
           {:else}
             🙂
           {/if}

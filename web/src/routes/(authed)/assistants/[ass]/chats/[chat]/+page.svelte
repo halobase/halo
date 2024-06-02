@@ -18,26 +18,48 @@
   /** @param {CustomEvent<import("$lib/types").Message>} e  */
   async function __send(e) {
     __messages.update((a) => [...a, e.detail]);
-    await backup(e.detail);
     disabled = true;
   }
 
   /** @param {CustomEvent<import("$lib/types").Message>} e  */
   async function __recv(e) {
     __messages.update((a) => [...a, e.detail]);
-    await backup(e.detail);
+    await backup($__messages.slice(-2));
+    if ($__messages.length < 3) {
+      await summarize();
+    }
     disabled = false;
   }
 
-  /** @param {import("$lib/types").Message} msg  */
-  async function backup(msg) {
-    return fetch(`/_api/chats/${data.chat.id}/messages`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(msg)
-    });
+  async function summarize() {
+    /** @type {import("$lib/types").ChatAbstract} */
+    const abs = await fetch(
+      `/_api/assistants/${data.chat.assistant}/chats/${data.chat.id}/abstract`
+    ).then((res) => res.json());
+    return fetch(
+      `/_api/assistants/${data.chat.assistant}/chats/${data.chat.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({ summary: abs.text })
+      }
+    );
+  }
+
+  /** @param {import("$lib/types").Message[]} msgs  */
+  async function backup(msgs) {
+    return fetch(
+      `/_api/assistants/${data.chat.assistant}/chats/${data.chat.id}/messages/batch`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify(msgs)
+      }
+    );
   }
 </script>
 
@@ -51,7 +73,7 @@
   <main class="container grow overflow-hidden pt-0">
     <div class="flex flex-col justify-between grow overflow-hidden">
       <Header assistant={data.assistant} />
-      <List {url} on:stop={__recv} />
+      <List {url} assistant={data.assistant} on:stop={__recv} />
       <Prompt {disabled} on:send={__send} />
     </div>
   </main>

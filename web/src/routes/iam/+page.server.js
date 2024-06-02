@@ -26,7 +26,7 @@ export const actions = {
     /** @type {import("$lib/types").Token} */
     const { access_token, expiry } = token;
     event.cookies.set("hz-token", access_token, {
-      expires: new Date(expiry * 1000),
+      expires: new Date(expiry),
       path: "/",
     })
     return token;

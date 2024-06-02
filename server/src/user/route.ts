@@ -6,8 +6,8 @@ import { User } from "@lib/types";
 const app = new OpenAPIHono();
 
 app.openapi($get, async (ctx) => {
-  const auth = ctx.get("auth");  
-  const [user] = await surreal.select<User>(auth.user.id, auth.token);  
+  const auth = ctx.get("auth");
+  const [user] = await surreal.select<User>(auth.user.id, auth.token);
   return ctx.json(user);
 });
 

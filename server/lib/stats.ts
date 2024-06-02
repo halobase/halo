@@ -10,9 +10,9 @@ export function stats(): MiddlewareHandler {
         url: ctx.req.url,
         method: ctx.req.method,
         header: ctx.req.raw.headers,
-        user: auth?.user.id,
-      })
-    } catch (e) { }
+        user: auth?.user.id
+      });
+    } catch (e) {}
     await next();
-  }
+  };
 }

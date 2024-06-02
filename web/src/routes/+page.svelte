@@ -4,9 +4,9 @@
       精准农业数字模型 AI 服务平台
     </h1>
     <ul class="text-lg md:text-xl font-medium list-disc ml-6">
-      <li>分布式下游模型服务注册中心</li>
+      <li>分布式模型服务注册中心</li>
       <li>精准农业数字模型</li>
-      <li>专业农业知识图谱</li>
+      <li>专业农艺知识图谱</li>
       <li>AI 数字农艺专家</li>
     </ul>
     <div class="flex gap-4">

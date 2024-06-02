@@ -50,7 +50,7 @@ export type Service = Base & {
   level?: number,
   current?: string,
   readme?: string,
-  schema: OpenAPI,
+  schema?: OpenAPI,
 };
 
 export type Node = Base & {
@@ -79,7 +79,7 @@ export type LLM = {
 export type Assistant = Base & {
   name: string,
   description: string,
-  public: boolean,
+  level: number,
   knowledge: string,
   services: Array<string>,
   llm: LLM,
@@ -126,6 +126,18 @@ export type MessageContent = (
 export type Message = Base & {
   role: "user" | "assistant" | "system",
   content: MessageContent[]
+};
+
+export type FileURL = {
+  url: string;
+  name: string;
+  mime_type: string;
+  size?: number;
+};
+
+export type ChatAbstract = {
+  text: string;
+  file_urls: Array<FileURL>;
 };
 
 declare global {

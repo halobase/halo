@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "build": "bun build src/index.ts --target=bun --outfile=build/server.js",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.9.6",
@@ -11,6 +11,7 @@
     "jose": "^5.2.0",
     "openai": "^4.26.0",
     "openapi3-ts": "^4.2.1",
+    "prettier": "^3.2.5",
     "yaml": "^2.3.4",
     "zod": "^3.22.4"
   },

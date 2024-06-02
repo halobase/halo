@@ -17,10 +17,10 @@
     <PageHeader>
       <svelte:fragment slot="title">
         {data.service.icon}
-        {data.service.schema.info.title}
+        {data.service.schema?.info?.title}
       </svelte:fragment>
       <svelte:fragment slot="intro">
-        <p>{data.service.schema.info.description}</p>
+        <p></p>
       </svelte:fragment>
       <svelte:fragment>
         <nav class="tab">

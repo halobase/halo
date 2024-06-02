@@ -1,35 +1,42 @@
 import env from "./env";
 
 type Options = {
-  auth: Auth,
-  ns: string,
-  db: string,
+  auth: Auth;
+  ns: string;
+  db: string;
 };
 
-type Auth = string | {
-  sc?: string,
-  user: string,
-  pass: string,
-};
+type Auth =
+  | string
+  | {
+      sc?: string;
+      user: string;
+      pass: string;
+    };
 
-type Response<T> = {
-  status: "OK",
-  result: T,
-  detail?: string,
-} | {
-  status: "ERR",
-  result: string,
-  detail?: string,
-};
+type Response<T> =
+  | {
+      status: "OK";
+      result: T;
+      detail?: string;
+    }
+  | {
+      status: "ERR";
+      result: string;
+      detail?: string;
+    };
 
 type Event<T> = {
-  id: string,
-  action: string,
-  result: T,
+  id: string;
+  action: string;
+  result: T;
 };
 
 export class SurrealHTTP {
-  constructor(private url: string, private opts: Options) {
+  constructor(
+    private url: string,
+    private opts: Options
+  ) {
     if (!url) {
       throw new Error("surreal: URL is undefined");
     }
@@ -62,8 +69,8 @@ export class SurrealHTTP {
     );
     if (status === "ERR") {
       throw new Error(
-        detail ?? (typeof result === "string"
-          ? result : "Unexpected error"));
+        detail ?? (typeof result === "string" ? result : "Unexpected error")
+      );
     }
     if (typeof result === "string") {
       throw new TypeError("Bad result");
@@ -85,10 +92,16 @@ export class SurrealHTTP {
     const __vars = Object.fromEntries(
       Object.entries(vars ?? {}).map(([k, v]) => [
         k,
-        typeof v === "string" ? v : JSON.stringify(v),
+        typeof v === "string" ? v : JSON.stringify(v)
       ])
     );
-    return await this.do<T>("POST", "/sql", sql, new URLSearchParams(__vars), auth);
+    return await this.do<T>(
+      "POST",
+      "/sql",
+      sql,
+      new URLSearchParams(__vars),
+      auth
+    );
   }
 
   private async do<T>(
@@ -96,29 +109,29 @@ export class SurrealHTTP {
     path: string,
     body?: string | object,
     params?: URLSearchParams,
-    auth?: Auth,
+    auth?: Auth
   ): Promise<Array<Response<T>>> {
     auth = auth ?? this.opts.auth;
     const headers = {
-      "NS": this.opts.ns,
-      "DB": this.opts.db,
-      "Accept": "application/json",
-      "Authorization": typeof auth === "string"
-        ? SurrealHTTP.bearer_token(auth)
-        : SurrealHTTP.basic_auth(auth),
-      "Content-Type": typeof body === "string"
-        ? "text/plain"
-        : "application/json",
+      NS: this.opts.ns,
+      DB: this.opts.db,
+      Accept: "application/json",
+      Authorization:
+        typeof auth === "string"
+          ? SurrealHTTP.bearer_token(auth)
+          : SurrealHTTP.basic_auth(auth),
+      "Content-Type":
+        typeof body === "string" ? "text/plain" : "application/json"
     };
     const url = `${this.url}${path}?${params ?? ""}`;
     const res = await fetch(url, {
       method,
       headers,
-      body: typeof body === "string" ? body : JSON.stringify(body),
+      body: typeof body === "string" ? body : JSON.stringify(body)
     });
     if (!res.ok) {
       throw new Error(await res.text());
-    }    
+    }
     return await res.json();
   }
 
@@ -134,15 +147,11 @@ export class SurrealHTTP {
   }
 }
 
-
-export const surreal = new SurrealHTTP(
-  env.SURREAL_URL!,
-  {
-    ns: env.SURREAL_NS!,
-    db: env.SURREAL_DB!,
-    auth: {
-      user: env.SURREAL_USER!,
-      pass: env.SURREAL_PASS!
-    },
+export const surreal = new SurrealHTTP(env.SURREAL_URL!, {
+  ns: env.SURREAL_NS!,
+  db: env.SURREAL_DB!,
+  auth: {
+    user: env.SURREAL_USER!,
+    pass: env.SURREAL_PASS!
   }
-);
+});

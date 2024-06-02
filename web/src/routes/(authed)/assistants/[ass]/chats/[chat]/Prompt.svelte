@@ -50,8 +50,9 @@
   }
 
   /** @param {KeyboardEvent} e  */
-  function __keypress(e) {
+  function __keydown(e) {
     if (e.key === "Enter" && !e.ctrlKey && !e.shiftKey) {
+      e.preventDefault();
       return __submit();
     }
   }
@@ -62,12 +63,19 @@
   <form class="contents mt-2" on:submit|preventDefault={__submit}>
     <div class="flex items-center justify-between gap-4 my-2">
       <Controller />
-      <button class="btn btn-alpha btn-sm" type="submit" {disabled}>发送</button>
+      <button class="btn btn-alpha btn-sm" type="submit" {disabled}>
+        发送
+      </button>
     </div>
     <textarea
       class="block input p-2 h-10 sm:h-20 sb sb-sm"
       placeholder="Enter 发送, Shift + Enter 换行"
-      on:keypress|preventDefault={debounce(__keypress, 200)}
+      on:keydown={debounce(__keydown, 200)}
+      on:keypress={(e) => {
+        if (e.key === "Enter" && !e.ctrlKey && !e.shiftKey) {
+          e.preventDefault();
+        }
+      }}
       bind:value
     />
   </form>

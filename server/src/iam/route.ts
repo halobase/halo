@@ -7,12 +7,11 @@ import { Jwt } from "hono/utils/jwt";
 import env from "@lib/env";
 import { surreal } from "@lib/surreal";
 
-
 const app = new OpenAPIHono();
 
 app.openapi($token, async (ctx) => {
   const init = ctx.req.valid("json");
-    
+
   let user;
   switch (init.type) {
     case "PP":
@@ -20,20 +19,23 @@ app.openapi($token, async (ctx) => {
       break;
     default:
       throw new HTTPException(400, {
-        message: `Granting by ${init.type} is not available yet`,
+        message: `Granting by ${init.type} is not available yet`
       });
   }
 
-  const expiry = Date.now() + 1 * DAY;
-  const access_token = await Jwt.sign({
-    iss: "halo.dev",
-    exp: Math.floor(expiry / 1000),
-    user,
-    ns: env.SURREAL_NS,
-    db: env.SURREAL_DB,
-    sc: "user",
-    tk: "user",
-  }, env.TOKEN_SECRET!);
+  const expiry = Date.now() + 7 * DAY;
+  const access_token = await Jwt.sign(
+    {
+      iss: "halo.dev",
+      exp: Math.floor(expiry / 1000),
+      user,
+      ns: env.SURREAL_NS,
+      db: env.SURREAL_DB,
+      sc: "user",
+      tk: "user"
+    },
+    env.TOKEN_SECRET!
+  );
 
   return ctx.json({
     access_token,
@@ -42,7 +44,8 @@ app.openapi($token, async (ctx) => {
 });
 
 async function grant_pp({ user, pass }: GrantPP): Promise<User> {
-  const results = await surreal.query(`
+  const results = await surreal.query(
+    `
   begin;
   let $users = (select id,level,secret from user where email = $email);
   if array::len($users) == 0 {
@@ -62,20 +65,19 @@ async function grant_pp({ user, pass }: GrantPP): Promise<User> {
     return null;
   };
   commit;
-  `, {
-    email: user,
-    secret: pass
-  });
+  `,
+    {
+      email: user,
+      secret: pass
+    }
+  );
   if (results.length !== 2) {
     throw new HTTPException(500);
   }
 
   if (!results[1]) {
     throw new HTTPException(400, {
-      res: Response.json(
-        { message: "Bad credentials" },
-        { status: 400 },
-      ),
+      res: Response.json({ message: "Bad credentials" }, { status: 400 })
     });
   }
   return results[1] as User;

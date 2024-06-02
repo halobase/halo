@@ -25,9 +25,38 @@ export function groupby(a, f) {
  * const a_boolean = !!get(form, "key");
  * 
  * @param {import("./types").FormDataLike} form
-  * @param {string} key
-  * @returns {string}
-  */
- export function get(form, key) {
-   return form.get(key)?.toString() || "";
- }
+ * @param {string} key
+ * @returns {string}
+ */
+export function get(form, key) {
+  return form.get(key)?.toString() || "";
+}
+
+/**
+ * @param {import("./types").FormDataLike} form
+ * @param {string} key
+ */
+export function get_or_undefined(form, key) {
+  return form.get(key)?.toString();
+}
+
+/**
+ * Reference: https://stackoverflow.com/questions/41431322/how-to-convert-formdata-html5-object-to-json
+ * @param {FormData} form 
+ */
+export function from_formdata(form) {
+  /** @type {Record<string, any>} */
+  const o = {};
+  form.forEach((v, k) => {
+    // Reflect.has in favor of: object.hasOwnProperty(key)
+    if (!Reflect.has(o, k)) {
+      o[k] = v;
+      return;
+    }
+    if (!Array.isArray(o[k])) {
+      o[k] = [o[k]];
+    }
+    o[k].push(v);
+  });
+  return o;
+}

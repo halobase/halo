@@ -9,13 +9,15 @@ export const $key = $base.extend({
   expires_at: z.string().datetime().optional(),
   secret: z.string().optional(),
   secret_truncated: z.string(),
-  key_onetime: z.string().optional(),
+  key_onetime: z.string().optional()
 });
 
-export const $key_init = z.object({
-  name: z.string().optional(),
-  scopes: z.array(z.string()).optional(),
-}).openapi("KeyInit");
+export const $key_init = z
+  .object({
+    name: z.string().optional(),
+    scopes: z.array(z.string()).optional()
+  })
+  .openapi("KeyInit");
 
 export const $list = createRoute({
   method: "get",
@@ -23,9 +25,7 @@ export const $list = createRoute({
   summary: "List keys",
   description: "List all keys.",
   operationId: "key-list",
-  tags: [
-    "Key"
-  ],
+  tags: ["Key"],
   responses: {
     200: {
       description: "An array of the Key object.",
@@ -44,15 +44,13 @@ export const $post = createRoute({
   summary: "Create a key",
   description: "Create a Key.",
   operationId: "key-create",
-  tags: [
-    "Key"
-  ],
+  tags: ["Key"],
   request: {
     body: {
       description: "The Key object",
       content: {
         "application/json": {
-          schema: $key_init,
+          schema: $key_init
         }
       }
     }
@@ -62,7 +60,7 @@ export const $post = createRoute({
       description: "The Key object.",
       content: {
         "application/json": {
-          schema: $key,
+          schema: $key
         }
       }
     }
@@ -75,13 +73,11 @@ export const $delete = createRoute({
   summary: "Revoke a key",
   description: "Revoke a key.",
   operationId: "key-revoke",
-  tags: [
-    "Key"
-  ],
+  tags: ["Key"],
   request: {
     params: z.object({
-      id: z.string(),
-    }),
+      id: z.string()
+    })
   },
   responses: {
     200: {

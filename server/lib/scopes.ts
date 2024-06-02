@@ -1,3 +1,3 @@
 export const scopes = {
-  "POST /services": "service.write",
-}
+  "POST /services": "service.write"
+};

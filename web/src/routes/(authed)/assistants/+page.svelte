@@ -7,8 +7,8 @@
 </script>
 
 <svelte:head>
-  <title>数字农艺专家 | 精准农业数字模型 AI 服务平台</title>
-  <meta name="description" content="数字农艺专家 | 精准农业数字模型 AI 服务平台 " />
+  <title>数字农艺专家</title>
+  <meta name="description" content="数字农艺专家" />
 </svelte:head>
 
 <main class="container container-xl">

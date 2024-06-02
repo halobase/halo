@@ -17,8 +17,8 @@ export function hexify(b) {
  */
 export async function deserialize_response(res) {
   const type = res.headers.get("Content-Type") || "text/plain";
-  const body = type === "text/plain" ?
-    await res.text() : await res.json();
+  const body = type.startsWith("application/json") ?
+    await res.json() : await res.text();
   if (res.ok) {
     return [body, undefined];
   }

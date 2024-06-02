@@ -1,7 +1,7 @@
 @layer components {
   .select {
     @apply appearance-none select-none outline-none;
-    @apply w-full px-4 py-2 rounded-md;
+    @apply w-full px-3 py-2 rounded-md;
     @apply text-sm text-fore bg-fore bg-opacity-10;
     @apply cursor-pointer;
     /* Taken from https://daisyui.com/components/select */
@@ -50,5 +50,9 @@
 
   .select-error {
     @apply border border-error-500;
+  }
+
+  .select:disabled {
+    @apply cursor-not-allowed;
   }
 }

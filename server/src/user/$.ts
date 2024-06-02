@@ -7,15 +7,13 @@ export const $get = createRoute({
   summary: "Get the authenticated user",
   description: "Get the authenticated user.",
   operationId: "user-get-authenticated-user",
-  tags: [
-    "User"
-  ],
+  tags: ["User"],
   responses: {
     200: {
       description: "A user object",
       content: {
         "application/json": {
-          schema: $user,
+          schema: $user
         }
       }
     }

@@ -10,7 +10,9 @@
     <div class="card p-2 flex gap-2">
       <div class="text-4xl">{ass.icon}</div>
       <div class="intro">
-        <h3>{ass.name}</h3>
+        <h3>
+          <a class="hover:underline" href="/assistants/{ass.id}/settings">{ass.name}</a>
+        </h3>
         <p>{ass.description ?? ""}</p>
         <div class="flex gap-2">
           <a class="btn" href="/knowledge/{ass.knowledge}">

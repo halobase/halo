@@ -1,31 +1,46 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { $base } from "@lib/$";
 
-
-export const $ServiceInit = z.object({
-  readme: z.string({ description: "Service README content in plain text." }).optional(),
-  schema: z.any({ description: "OpenAPI 3.0 schema." }).optional(),
-  icon: z.string({ description: "Service icon. Can be any emoji character." }).optional(),
-  level: z.number({ description: "Users with this level have accessible to this service." }).optional(),
-}).openapi("ServiceInit");
+export const $ServiceInit = z
+  .object({
+    readme: z
+      .string({ description: "Service README content in plain text." })
+      .optional(),
+    schema: z.any({ description: "OpenAPI 3.0 schema." }).optional(),
+    icon: z
+      .string({ description: "Service icon. Can be any emoji character." })
+      .optional(),
+    level: z
+      .number({
+        description: "Users with this level have accessible to this service."
+      })
+      .optional()
+  })
+  .openapi("ServiceInit");
 
 export const $Service = $base.merge($ServiceInit).openapi("Service");
 
-export const $Node = $base.extend({
-  url: z.string({ description: "Service node URL." }),
-  service: z.string({ description: "Service ID." }),
-  user: z.string({ description: "User ID." }),
-  tags: z.array(z.string({ description: "Service node tag." })),
-}).openapi("Node");
+export const $Node = $base
+  .extend({
+    url: z.string({ description: "Service node URL." }),
+    service: z.string({ description: "Service ID." }),
+    user: z.string({ description: "User ID." }),
+    tags: z.array(z.string({ description: "Service node tag." }))
+  })
+  .openapi("Node");
 
-export const $NodeInit = z.object({
-  url: z.string({ description: "Service node URL." }),
-  tags: z.array(z.string({ description: "Service tag name." })),
-}).openapi("NodeInit");
+export const $NodeInit = z
+  .object({
+    url: z.string({ description: "Service node URL." }),
+    tags: z.array(z.string({ description: "Service tag name." }))
+  })
+  .openapi("NodeInit");
 
-export const $ServicePathParam = z.object({
-  id: z.string({ description: "Service ID." }),
-}).openapi("ServicePathParam");
+export const $ServicePathParam = z
+  .object({
+    id: z.string({ description: "Service ID." })
+  })
+  .openapi("ServicePathParam");
 
 export const $list = createRoute({
   method: "get",
@@ -33,19 +48,14 @@ export const $list = createRoute({
   summary: "List services",
   description: "List all services you have ownership or verfied access to.",
   operationId: "service-list",
-  tags: [
-    "Service"
-  ],
-  security: [
-    { "api_key": [] },
-    { "api_token": [] },
-  ],
+  tags: ["Service"],
+  security: [{ api_key: [] }, { api_token: [] }],
   responses: {
     200: {
       description: "List services response.",
       content: {
         "application/json": {
-          schema: z.array($Service),
+          schema: z.array($Service)
         }
       }
     }
@@ -58,18 +68,16 @@ export const $get = createRoute({
   summary: "Get a service",
   description: "Get a service you have ownership or verfied access to.",
   operationId: "service-get",
-  tags: [
-    "Service"
-  ],
+  tags: ["Service"],
   request: {
-    params: $ServicePathParam,
+    params: $ServicePathParam
   },
   responses: {
     200: {
       description: "The Service object.",
       content: {
         "application/json": {
-          schema: $Service,
+          schema: $Service
         }
       }
     }
@@ -82,18 +90,16 @@ export const $schema = createRoute({
   summary: "Get a service schema",
   description: "Get a service schema you have ownership or verfied access to.",
   operationId: "service-get-schema",
-  tags: [
-    "Service"
-  ],
+  tags: ["Service"],
   request: {
-    params: $ServicePathParam,
+    params: $ServicePathParam
   },
   responses: {
     200: {
       description: "The OpenAPI v3.0.3 schema object.",
       content: {
         "application/json": {
-          schema: z.object({}, { description: "OpenAPI v3.0.3 object." }),
+          schema: z.object({}, { description: "OpenAPI v3.0.3 object." })
         }
       }
     }
@@ -106,11 +112,9 @@ export const $readme = createRoute({
   summary: "Get a service readme",
   description: "Get a service readme you have ownership or verfied access to.",
   operationId: "service-get-readme",
-  tags: [
-    "Service"
-  ],
+  tags: ["Service"],
   request: {
-    params: $ServicePathParam,
+    params: $ServicePathParam
   },
   responses: {
     200: {
@@ -130,17 +134,15 @@ export const $post = createRoute({
   summary: "Create a service",
   description: "Create a service.",
   operationId: "service-create",
-  tags: [
-    "Service"
-  ],
+  tags: ["Service"],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: $ServiceInit,
+          schema: $ServiceInit
         }
       },
-      required: true,
+      required: true
     }
   },
   responses: {
@@ -148,7 +150,7 @@ export const $post = createRoute({
       description: "The service object created",
       content: {
         "application/json": {
-          schema: $Service,
+          schema: $Service
         }
       }
     },
@@ -164,18 +166,16 @@ export const $update = createRoute({
   summary: "Update a service",
   description: "Update a service.",
   operationId: "service-update-service",
-  tags: [
-    "Service"
-  ],
+  tags: ["Service"],
   request: {
     params: $ServicePathParam,
     body: {
       content: {
         "application/json": {
-          schema: $ServiceInit,
+          schema: $ServiceInit
         }
       },
-      required: true,
+      required: true
     }
   },
   responses: {
@@ -183,14 +183,14 @@ export const $update = createRoute({
       description: "The service object updated",
       content: {
         "application/json": {
-          schema: $Service,
+          schema: $Service
         }
       }
     },
     404: {
       description: "Service with the given ID does not exist."
     }
-  },
+  }
 });
 
 export const $delete = createRoute({
@@ -199,11 +199,9 @@ export const $delete = createRoute({
   summary: "Delete a service",
   description: "Delete a service.",
   operationId: "service-delete",
-  tags: [
-    "Service"
-  ],
+  tags: ["Service"],
   request: {
-    params: $ServicePathParam,
+    params: $ServicePathParam
   },
   responses: {
     200: {
@@ -218,18 +216,16 @@ export const $create_node = createRoute({
   summary: "Create a service node",
   description: "Register a service node",
   operationId: "service-node-create",
-  tags: [
-    "Service Node"
-  ],
+  tags: ["Service Node"],
   request: {
     params: $ServicePathParam,
     body: {
       content: {
         "application/json": {
-          schema: $NodeInit,
+          schema: $NodeInit
         }
       },
-      required: true,
+      required: true
     }
   },
   responses: {
@@ -237,10 +233,10 @@ export const $create_node = createRoute({
       description: "",
       content: {
         "application/json": {
-          schema: $Node,
+          schema: $Node
         }
-      },
-    },
+      }
+    }
   }
 });
 
@@ -250,18 +246,16 @@ export const $list_nodes = createRoute({
   summary: "List service nodes",
   description: "List service nodes you have ownership or verfied access to.",
   operationId: "service-node-list",
-  tags: [
-    "Service Node"
-  ],
+  tags: ["Service Node"],
   request: {
-    params: $ServicePathParam,
+    params: $ServicePathParam
   },
   responses: {
     200: {
       description: "An array of the Node object.",
       content: {
         "application/json": {
-          schema: z.array($Node),
+          schema: z.array($Node)
         }
       }
     }

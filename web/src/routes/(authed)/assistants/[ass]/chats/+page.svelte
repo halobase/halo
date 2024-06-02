@@ -3,7 +3,7 @@
   import { Form, PageHeader } from "$lib";
   import List from "./List.svelte";
   export let data;
-  const title = `与${data.assistant.name}的历史对话`;
+  const title = `与 ${data.assistant.name} 的历史对话`;
 
   /** @param {CustomEvent<import("$lib/types").Chat>} e  */
   async function __create(e) {

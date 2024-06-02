@@ -1,11 +1,24 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { OpenAPIObject, OperationObject, RequestBodyObject } from "openapi3-ts/oas30";
+import {
+  OpenAPIObject,
+  OperationObject,
+  RequestBodyObject
+} from "openapi3-ts/oas30";
 import { surreal } from "@lib/surreal";
 import { Node, Service } from "@lib/types";
-import { $list, $post as $create, $readme, $create_node, $schema, $list_nodes, $get, $delete, $update } from "./$";
+import {
+  $list,
+  $post as $create,
+  $readme,
+  $create_node,
+  $schema,
+  $list_nodes,
+  $get,
+  $delete,
+  $update
+} from "./$";
 import { ChatCompletionTool } from "openai/resources/index.mjs";
 import { HTTPException } from "hono/http-exception";
-
 
 const app = new OpenAPIHono();
 
@@ -15,7 +28,7 @@ app.openapi($list, async (ctx) => {
   const [services] = await surreal.query<Service[]>(
     `select * omit readme, schema.paths from service`,
     undefined,
-    auth.token,
+    auth.token
   );
   return ctx.json(services);
 });
@@ -34,7 +47,7 @@ app.openapi($schema, async (ctx) => {
   const [[schema]] = await surreal.query<OpenAPIObject[]>(
     `select value schema from $id`,
     { id },
-    auth.token,
+    auth.token
   );
   return ctx.json(schema);
 });
@@ -46,7 +59,7 @@ app.openapi($readme, async (ctx) => {
   const [[readme]] = await surreal.query<string[]>(
     `select value readme from $id`,
     { id },
-    auth.token,
+    auth.token
   );
   return ctx.text(readme);
 });
@@ -67,9 +80,11 @@ app.openapi($update, async (ctx) => {
   const { id } = ctx.req.param();
   const init = ctx.req.valid("json");
   const [service] = await surreal.update<Service>(id, init, auth.token);
-  const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
-  await surreal.update<Service>(service.id, { tools }, auth.token);
-  service.tools = tools;
+  if (init.schema) {
+    const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
+    await surreal.update<Service>(service.id, { tools }, auth.token);
+    service.tools = tools;
+  }
   return ctx.json(service);
 });
 
@@ -88,9 +103,9 @@ app.openapi($create_node, async (ctx) => {
     `node`,
     {
       ...init,
-      service: id,
+      service: id
     },
-    auth.token,
+    auth.token
   );
   return ctx.json(node);
 });
@@ -112,7 +127,7 @@ app.all("/:id/fetch/*", async (ctx) => {
   const [nodes] = await surreal.query<Node[]>(
     `select * from node where service = $id`,
     { id },
-    auth.token,
+    auth.token
   );
   if (nodes.length <= 0) {
     return ctx.notFound();
@@ -121,12 +136,16 @@ app.all("/:id/fetch/*", async (ctx) => {
   const node = nodes[i];
   const url = `${node.url}${/\/fetch.*/.exec(ctx.req.url)![0].slice(6)}`;
   const req = new Request(url, ctx.req.raw);
+  console.log("[halo-server] Fetching", url);
   return fetch(req);
 });
 
 const allow_methods = ["get", "post", "delete", "put", "patch"];
 
-function flatten_openai_tools(service: string, schema?: OpenAPIObject): ChatCompletionTool[] {
+function flatten_openai_tools(
+  service: string,
+  schema?: OpenAPIObject
+): ChatCompletionTool[] {
   if (!schema) return [];
 
   const tools: ChatCompletionTool[] = [];
@@ -144,10 +163,11 @@ function flatten_openai_tools(service: string, schema?: OpenAPIObject): ChatComp
           function: {
             name: `${service}::${op.operationId}`,
             description: op.description,
-            parameters: (op.requestBody as RequestBodyObject)
-              .content["application/json"].schema as Record<string, unknown>,
+            parameters: (op.requestBody as RequestBodyObject).content[
+              "application/json"
+            ].schema as Record<string, unknown>
           }
-        })
+        });
       }
     });
   });

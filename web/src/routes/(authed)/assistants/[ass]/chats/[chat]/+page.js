@@ -7,10 +7,10 @@ export async function load(event) {
    */
   const [chat, msgs] = await Promise.all([
     event.fetch(
-      `/_api/chats/${event.params.chat}`
+      `/_api/assistants/${event.params.ass}/chats/${event.params.chat}`
     ).then(res => res.json()),
     event.fetch(
-      `/_api/chats/${event.params.chat}/messages`
+      `/_api/assistants/${event.params.ass}/chats/${event.params.chat}/messages`
     ).then(res => res.json()),
   ])
 

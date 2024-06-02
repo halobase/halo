@@ -8,21 +8,22 @@ import { surreal } from "./surreal";
 
 declare module "hono" {
   interface ContextVariableMap {
-    auth: Auth,
+    auth: Auth;
   }
 }
 
 type Options = {
-  secret: string | ((ctx: Context) => Promise<string>),
-  cookie?: string,
-  apikey?: string,
-  alg?: AlgorithmTypes,
+  secret: string | ((ctx: Context) => Promise<string>);
+  cookie?: string;
+  apikey?: string;
+  alg?: AlgorithmTypes;
 };
 
 export function auth(opts: Options): MiddlewareHandler {
-
   if (!crypto.subtle || !crypto.subtle.importKey) {
-    throw new Error("auth: `crypto.subtle.importKey` is undefined in the environment.");
+    throw new Error(
+      "auth: `crypto.subtle.importKey` is undefined in the environment."
+    );
   }
 
   return async function (ctx, next) {
@@ -32,7 +33,7 @@ export function auth(opts: Options): MiddlewareHandler {
       const parts = creds.split(/\s+/);
       if (parts.length !== 2) {
         throw new HTTPException(401, {
-          res: unauthorized(ctx, "Bad credentials structure."),
+          res: unauthorized(ctx, "Bad credentials structure.")
         });
       } else {
         token = parts[1];
@@ -50,40 +51,39 @@ export function auth(opts: Options): MiddlewareHandler {
 
     if (!token) {
       throw new HTTPException(401, {
-        res: unauthorized(ctx, "No credentials found in request"),
+        res: unauthorized(ctx, "No credentials found in request")
       });
     }
 
-    const secret = typeof opts.secret === "string"
-      ? opts.secret : await opts.secret(ctx);
+    const secret =
+      typeof opts.secret === "string" ? opts.secret : await opts.secret(ctx);
 
     let claims;
     try {
       claims = await Jwt.verify(token, secret, opts.alg);
     } catch (e) {
       throw new HTTPException(401, {
-        res: unauthorized(ctx, "Token verification failed."),
+        res: unauthorized(ctx, "Token verification failed.")
       });
     }
     ctx.set("auth", {
       user: claims.user as User,
-      token,
+      token
     });
     await next();
-  }
+  };
 }
 
 async function exchange(ctx: Context, key?: string) {
-  if (!key)
-    return "";
+  if (!key) return "";
 
   const slices = key.split("-");
   if (slices.length !== 3) {
     throw new HTTPException(401, {
-      res: unauthorized(ctx, "Bad API Key"),
+      res: unauthorized(ctx, "Bad API Key")
     });
   }
-  
+
   const [, [k2t]] = await surreal.query<[K2T]>(
     `begin;
       let $keys = select * from $key_id where crypto::argon2::compare(secret, $key_secret);
@@ -92,11 +92,11 @@ async function exchange(ctx: Context, key?: string) {
       };
      commit;
     `,
-    { 
+    {
       key_id: `key:${slices[1]}`,
       key_secret: slices[2]
-    },
-  );  
+    }
+  );
   // TODO: filter scopes via ctx
   return k2t?.token;
 }
@@ -104,7 +104,7 @@ async function exchange(ctx: Context, key?: string) {
 function unauthorized(ctx: Context, message: string) {
   return Response.json(
     {
-      message,
+      message
     },
     {
       status: 401,

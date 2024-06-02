@@ -5,7 +5,7 @@
       class="hover:underline underline-offset-4"
       href="https://github.com/halobase"
       target="_blank"
-      rel="noopener noreferrer">Halo</a
+      rel="noopener noreferrer">ArchiveModel</a
     >
     2024
   </p>

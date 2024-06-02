@@ -53,7 +53,7 @@
 
   .markdown ol>li:not(:last-child),
   .markdown ul>li:not(:last-child) {
-    @apply mb-1.5;
+    @apply mb-2;
   }
 
   .markdown pre {

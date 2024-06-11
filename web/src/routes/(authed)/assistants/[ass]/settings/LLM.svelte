@@ -21,8 +21,9 @@
 >
   <label class="md:w-1/2">
     <h3>模型</h3>
-    <select class="select" name="llm.model">
+    <select class="select" name="llm.model" value={assistant.llm.model}>
       <option value="glm-3-turbo">glm-3-turbo</option>
+      <option value="glm-4">glm-4</option>
     </select>
   </label>
   <label>

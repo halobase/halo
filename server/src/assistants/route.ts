@@ -37,7 +37,7 @@ import type {
 
 const app = new OpenAPIHono({});
 
-const model = "glm-3-turbo";
+const model = "glm-4";
 
 function normalize(cs: MessageContent[]): string {
   let text = "";

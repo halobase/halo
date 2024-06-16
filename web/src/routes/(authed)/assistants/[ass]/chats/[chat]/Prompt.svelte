@@ -16,7 +16,7 @@
 
   function __submit() {
     if (disabled || (!value && !$__files)) {
-      return;
+      return;    
     }
 
     /** @type {import("$lib/types").MessageContent[]} */

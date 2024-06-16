@@ -70,7 +70,7 @@
     {@const n = $__messages.length}
     {#if i === n - 1 && role === "user"}
       <li class="w-5/6 flex gap-2 mb-2">
-        <div class="text-3xl">😇</div>
+        <div class="text-3xl">{assistant.icon}</div>
         <Completion {url} on:stop />
       </li>
     {/if}

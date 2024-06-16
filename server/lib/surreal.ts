@@ -124,6 +124,9 @@ export class SurrealHTTP {
         typeof body === "string" ? "text/plain" : "application/json"
     };
     const url = `${this.url}${path}?${params ?? ""}`;
+    
+    // console.log(url);
+    
     const res = await fetch(url, {
       method,
       headers,

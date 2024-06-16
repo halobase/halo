@@ -25,7 +25,7 @@
   <label class="md:w-1/2">
     <h3>知识库</h3>
     <select class="select" name="knowledge" value={assistant.knowledge}>
-      <option value={assistant.knowledge}>{assistant.knowledge}</option>
+      <option value="1797517354603782144">脆李知识库</option>
     </select>
   </label>
   <label class="md:w-1/2">

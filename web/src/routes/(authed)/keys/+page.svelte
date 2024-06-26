@@ -30,12 +30,11 @@
   <div class="flex flex-col justify-between gap-6 md:flex-row 2xl:mb-6">
     <div class="intro intro-2xl">
       <h1>API Keys</h1>
+      <p>API Key 用于服务端到服务端通信，所以不能将其暴露在任何客户端。</p>
       <p>
-        API Key 用于服务端到服务端通信，所以不能将其暴露在任何客户端。
-      </p>
-      <p>
-        所有 API Key 不会被明文存储，且只能在刚生成时可见。如果丢失或泄露，则需生成新的 API Key, 
-        同时更新使用了该 API key 的应用。更多关于 API key 的信息见
+        所有 API Key
+        不会被明文存储，且只能在刚生成时可见。如果丢失或泄露，则需生成新的 API
+        Key, 同时更新使用了该 API key 的应用。更多关于 API key 的信息见
         <a
           class="underline"
           href="https://en.wikipedia.org/wiki/API_key"
@@ -68,6 +67,10 @@
     <label>
       <h3>名称</h3>
       <input class="input" type="text" name="name" value="API Key" required />
+    </label>
+    <label>
+      <h3>最大使用次数（-1 表示不限次数）</h3>
+      <input class="input" type="number" name="lives" value={-1} required />
     </label>
     <div class="group">
       <h3>作用域</h3>

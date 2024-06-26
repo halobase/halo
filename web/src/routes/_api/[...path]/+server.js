@@ -14,6 +14,7 @@ console.log("[halo] Using env.PUBLIC_API_URL:", env.PUBLIC_API_URL);
 async function handle(event) {
   const url = `${base_url}/${event.params.path}${event.url.search}`;
   const req = event.request;
-  req.headers.set("Authorzation", event.cookies.get("hz-token") ?? "")
+  req.headers.set("Authorization", `Bearer ${event.cookies.get("hz-token")}`)
+  req.headers.delete("hz-token")
   return event.fetch(url, req);
 }

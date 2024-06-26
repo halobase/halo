@@ -19,7 +19,7 @@ function __url(op, root) {
   console.log(root?.servers);
   console.log(base_url);
   base_url ||= (root?.servers?.length ? root.servers[0].url : "");
-  console.log(base_url);
+  console.log(op.path);
   return `${base_url}${op.path}`;
 }
 

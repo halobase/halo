@@ -135,9 +135,16 @@ app.all("/:id/fetch/*", async (ctx) => {
   const i = Math.floor(Math.random() * 10) % nodes.length;
   const node = nodes[i];
   const url = `${node.url}${/\/fetch.*/.exec(ctx.req.url)![0].slice(6)}`;
-  const req = new Request(url, ctx.req.raw);
   console.log("[halo-server] Fetching", url);
-  return fetch(req);
+  const ctype = ctx.req.raw.headers.get("content-type");
+  const headers = new Headers({
+    "content-type": ctype ?? "application/json",
+  });
+  return fetch(url, {
+    method: ctx.req.raw.method,
+    headers: headers,
+    body: ctx.req.raw.body
+  });
 });
 
 const allow_methods = ["get", "post", "delete", "put", "patch"];
@@ -158,12 +165,16 @@ function flatten_openai_tools(
             message: `Service schema missing operationId in path ${path}`
           });
         }
+        const content = (op.requestBody as RequestBodyObject).content;
+        if (!("application/json" in content)) {
+          return
+        }
         tools.push({
           type: "function",
           function: {
             name: `${service}::${op.operationId}`,
             description: op.description,
-            parameters: (op.requestBody as RequestBodyObject).content[
+            parameters: content[
               "application/json"
             ].schema as Record<string, unknown>
           }

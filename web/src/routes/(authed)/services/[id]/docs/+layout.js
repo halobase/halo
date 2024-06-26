@@ -30,7 +30,7 @@ async function group_schema(api_url, { id, schema }) {
             method,
             path,
             servers: [
-              { url: `${api_url}/services/${id}/fetch${path}` }
+              { url: `${api_url}/services/${id}/fetch` }
             ]
           }
           groups[key].push(operation);

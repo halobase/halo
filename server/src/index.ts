@@ -81,7 +81,6 @@ app.route("/iam", iam);
 app.use(
   "/*",
   auth({
-    cookie: "hz-token",
     apikey: "x-api-key",
     secret: async (ctx) => env.TOKEN_SECRET!
   }),

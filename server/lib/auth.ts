@@ -86,11 +86,11 @@ async function exchange(ctx: Context, key?: string) {
 
   const [, [k2t]] = await surreal.query<[K2T]>(
     `begin;
-      let $keys = select * from $key_id where crypto::argon2::compare(secret, $key_secret);
-      if array::len($keys) > 0 {
+    let $keys = select * from $key_id where crypto::argon2::compare(secret, $key_secret);
+    if array::len($keys) > 0 {
         return select key.scopes, token from k2t where key = $keys[0].id fetch key;
-      };
-     commit;
+    };
+    commit;
     `,
     {
       key_id: `key:${slices[1]}`,

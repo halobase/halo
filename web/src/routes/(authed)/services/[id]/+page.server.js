@@ -17,7 +17,11 @@ export const actions = {
 
     const schema = get_or_undefined(form, "schema");
     if (schema !== undefined) {
-      update = { ...update, schema: JSON.parse(schema || "{}") };
+      try {
+        update = { ...update, schema: JSON.parse(schema || "{}") };
+      } catch {
+        return fail(400, { message: "JSON 格式错误" });
+      }
     }
 
     const readme = get_or_undefined(form, "readme");
@@ -37,7 +41,7 @@ export const actions = {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(update),
     });
-    
+
     const [service, error] = await deserialize_response(res);
     return error ? fail(res.status, error) : service;
   },

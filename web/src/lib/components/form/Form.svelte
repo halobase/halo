@@ -33,6 +33,7 @@
   class:items-center={direction === "row"}
   use:enhance={function () {
     pending = true;
+    error = "";
     return async ({ update, result }) => {
       await update({ reset });
       switch (result.type) {

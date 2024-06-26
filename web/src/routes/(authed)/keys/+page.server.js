@@ -6,11 +6,12 @@ export const actions = {
   create: async function (event) {
     const form = await event.request.formData();
     const name = get(form, "name");
+    const lives = +get(form, "lives");
     const scopes = form.getAll("scope").map(v => v.toString());
     const res = await event.fetch("/_api/keys", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name, scopes }),
+      body: JSON.stringify({ name, lives, scopes }),
     });
     /** @type {import("$lib/utils/types").ResponseDeserialized<import("$lib/types").Key>} */
     const [key, err] = await deserialize_response(res);

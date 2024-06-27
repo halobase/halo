@@ -8,13 +8,9 @@ export const actions = {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         icon: "🌐",
-        schema: {
-          openapi: "3.0.3",
-          info: {
-            title: "未命名模型",
-            version: "0.0.1"
-          },
-        }
+        name: "未命名模型",
+        description: "模型简要介绍",
+        openapi: "{}"
       }),
     });
     const [service, error] = await deserialize_response(res);

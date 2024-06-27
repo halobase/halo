@@ -1,6 +1,7 @@
 export async function load(event) {
   const { service, api_url } = await event.parent();
   const schema = await group_schema(api_url, service);
+  console.log(api_url);
   return {
     schema,
   }

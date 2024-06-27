@@ -12,6 +12,7 @@ export async function load(event) {
     event.fetch(`/_api/services/${id}/nodes`)
       .then(res => res.json()),
   ]);
+  if(!service.schema)  service.schema = JSON.parse(service.openapi); 
   return {
     service,
     nodes,

@@ -32,7 +32,7 @@
   </div>
   <Form action="/services/{service.id}?/update" on:success={__update}>
     <label>
-      <textarea class="input" name="schema" bind:value rows="10"></textarea>
+      <textarea class="input" name="openapi" bind:value rows="10"></textarea>
     </label>
     <svelte:fragment slot="action">
       <label class="btn">

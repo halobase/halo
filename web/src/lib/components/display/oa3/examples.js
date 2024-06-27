@@ -13,7 +13,9 @@ import { deref_if_needed } from "./lib";
  * @param {Operation} op 
  * @param {OpenAPI} [root] 
  */
+
 function __url(op, root) {
+  console.log(op,root);
   let base_url = op.servers?.length ? op.servers[0].url : "";
   console.log(op.servers);
   console.log(root?.servers);

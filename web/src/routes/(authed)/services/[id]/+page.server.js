@@ -1,5 +1,5 @@
 import { deserialize_response } from '$lib/utils/encoding.js';
-import { get_or_undefined } from '$lib/utils/object.js';
+import { get, get_or_undefined } from '$lib/utils/object.js';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
@@ -12,16 +12,22 @@ export const actions = {
   },
   update: async function (event) {
     let update = {};
-
+    /** @type {import("openapi3-ts/oas30").OpenAPIObject}  */
+    let schema;
+    
     const form = await event.request.formData();
-
-    const schema = get_or_undefined(form, "schema");
-    if (schema !== undefined) {
+    let name = get(form, "name");
+    let description = get(form, "description");
+    const openapi = get_or_undefined(form, "openapi");
+    if (openapi !== undefined) {
       try {
-        update = { ...update, schema: JSON.parse(schema || "{}") };
+        schema = JSON.parse(openapi);
       } catch {
         return fail(400, { message: "JSON 格式错误" });
       }
+      name ||= schema.info.title;
+      description ||= schema.info.description?? "";
+      update = { ...update, openapi, name, description };
     }
 
     const readme = get_or_undefined(form, "readme");

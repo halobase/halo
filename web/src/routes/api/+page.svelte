@@ -1,4 +1,5 @@
 <script>
+    import { env } from '$env/dynamic/public';
   export let data;
 </script>
 
@@ -10,7 +11,8 @@
   <main class="grid gap-4">
     <div class="card p-4 intro">
       <h3>URL</h3>
-      <p>{data.api_url}</p>
+      <!-- <p>{data.api_url}</p> -->
+       <p>{env.PUBLIC_ORIGIN}</p>
     </div>
     <div class="card p-4 intro">
       <h3>Auth</h3>

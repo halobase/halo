@@ -5,7 +5,6 @@ import {
   RequestBodyObject
 } from "openapi3-ts/oas30";
 import { surreal } from "@lib/surreal";
-import { Node, Service } from "@lib/types";
 import {
   $list,
   $post as $create,
@@ -15,7 +14,9 @@ import {
   $list_nodes,
   $get,
   $delete,
-  $update
+  $update,
+  Service,
+  Node
 } from "./$";
 import { ChatCompletionTool } from "openai/resources/index.mjs";
 import { HTTPException } from "hono/http-exception";
@@ -26,7 +27,7 @@ const app = new OpenAPIHono();
 app.openapi($list, async (ctx) => {
   const auth = ctx.get("auth");
   const [services] = await surreal.query<Service[]>(
-    `select * omit readme, schema.paths from service`,
+    `select * omit readme, schema, openapi from service`,
     undefined,
     auth.token
   );
@@ -44,12 +45,12 @@ app.openapi($get, async (ctx) => {
 app.openapi($schema, async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.valid("param");
-  const [[schema]] = await surreal.query<OpenAPIObject[]>(
-    `select value schema from $id`,
+  const [[schema]] = await surreal.query<string[]>(
+    `select value openapi from $id`,
     { id },
     auth.token
   );
-  return ctx.json(schema);
+  return ctx.json(JSON.parse(schema));
 });
 
 // @ts-ignore
@@ -68,7 +69,7 @@ app.openapi($create, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
   const [service] = await surreal.create<Service>("service", init, auth.token);
-  const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
+  const tools = flatten_openai_tools(service.id, JSON.parse(init.openapi) as OpenAPIObject);
   await surreal.update<Service>(service.id, { tools }, auth.token);
   service.tools = tools;
   return ctx.json(service);
@@ -79,12 +80,14 @@ app.openapi($update, async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.param();
   const init = ctx.req.valid("json");
+  console.log(init);
   const [service] = await surreal.update<Service>(id, init, auth.token);
-  if (init.schema) {
-    const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
+  if (init.openapi) {
+    const tools = flatten_openai_tools(service.id, JSON.parse(init.openapi) as OpenAPIObject);
     await surreal.update<Service>(service.id, { tools }, auth.token);
     service.tools = tools;
   }
+  console.log("yes");
   return ctx.json(service);
 });
 

@@ -3,22 +3,32 @@ import { $base } from "@lib/$";
 
 export const $ServiceInit = z
   .object({
-    readme: z
-      .string({ description: "Service README content in plain text." })
-      .optional(),
-    schema: z.any({ description: "OpenAPI 3.0 schema." }).optional(),
-    icon: z
-      .string({ description: "Service icon. Can be any emoji character." })
-      .optional(),
+    readme: z.string({ description: "模型详细描述。" }).optional(),
+    openapi: z.string({ description: "OpenAPI 3.0 schema." }),
+    icon: z.string({ description: "模型图标。" }).optional(),
     level: z
       .number({
-        description: "Users with this level have accessible to this service."
+        description: "模型等级。"
       })
-      .optional()
+      .optional(),
+    name: z.string({ description: "模型名称。" }).optional(),
+    description: z.string({ description: "模型简要描述。" }).optional()
   })
   .openapi("ServiceInit");
 
-export const $Service = $base.merge($ServiceInit).openapi("Service");
+export const $Service = $base
+  .merge(
+    $ServiceInit.merge(
+      z.object({
+        tools: z.array(z.any({ description: "语言模型需要的工具描述。" }))
+      })
+    )
+  )
+  .openapi("Service");
+
+export type Service = z.infer<typeof $Service>;
+
+export type Node = z.infer<typeof $Node>;
 
 export const $Node = $base
   .extend({

@@ -51,6 +51,7 @@ export type Service = Base & {
   current?: string,
   readme?: string,
   schema?: OpenAPI,
+  openapi: string
 };
 
 export type Node = Base & {

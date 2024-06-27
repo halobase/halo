@@ -5,7 +5,7 @@ export async function load(event) {
   const user = await event.fetch("/_api/user")
     .then(res => res.ok ? res.json() : undefined);
 
-  const api_url = env.PUBLIC_API_URL;
+  const api_url = env.PUBLIC_ORIGIN;
   return {
     user,
     api_url,

@@ -60,7 +60,7 @@ app.doc("/schema", (ctx) => ({
   },
   servers: [
     {
-      url: "https://api.halo.archivemodel.cn"
+      url: "https://api.platform.archivemodel.cn"
     }
   ]
 }));

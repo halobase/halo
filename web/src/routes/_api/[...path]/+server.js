@@ -7,7 +7,6 @@ export const PUT = handle;
 export const PATCH = handle;
 
 const base_url = env.PUBLIC_API_URL;
-
 console.log("[halo] Using env.PUBLIC_API_URL:", env.PUBLIC_API_URL);
 
 /** @param {import("./$types").RequestEvent} event  */

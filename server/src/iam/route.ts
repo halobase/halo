@@ -51,7 +51,7 @@ async function grant_pp({ user, pass }: GrantPP): Promise<User> {
   if array::len($users) == 0 {
     return (create only user content {
       email: $email,
-      secret: $secret
+      secret: crypto::argon2::generate($secret)
     } return id, level);
   } 
   else if crypto::argon2::compare($users[0].secret, $secret) {

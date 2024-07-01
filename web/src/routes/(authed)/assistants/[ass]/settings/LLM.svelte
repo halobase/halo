@@ -1,6 +1,6 @@
 <script>
   import { Form, notify } from "$lib";
-
+  import { env } from '$env/dynamic/public';
   /** @type {import("$lib/types").Assistant} */
   export let assistant;
 </script>
@@ -22,8 +22,8 @@
   <label class="md:w-1/2">
     <h3>模型</h3>
     <select class="select" name="llm.model" value={assistant.llm.model}>
-      <option value="glm-3-turbo">glm-3-turbo</option>
-      <option value="glm-4">glm-4</option>
+      <option value="glm-4-air">glm-4-air</option>
+      <option value={env.PUBLIC_MODEL_TYPE}>备选方案</option>
     </select>
   </label>
   <label>

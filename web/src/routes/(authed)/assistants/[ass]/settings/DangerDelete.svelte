@@ -19,7 +19,7 @@
 <Confirm
   bind:enable
   color="error"
-  action="?/delete"
+  action="?/delete&id={assistant.id}"
   title="删除 {assistant.name}"
   confirm="确认删除"
   on:success={async () => {

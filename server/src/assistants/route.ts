@@ -220,6 +220,7 @@ app.openapi($list, async (ctx) => {
 });
 
 app.openapi($create, async (ctx) => {
+  console.log("创建");
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
   const [ass] = await surreal.create<Assistant>("ass", init, auth.token);

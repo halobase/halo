@@ -1,6 +1,6 @@
 <script>
+  import { env } from '$env/dynamic/public';
   import { Form, notify } from "$lib";
-
   /** @type {import("$lib/types").Assistant} */
   export let assistant;
   /** @type {import("$lib/types").Service[]} */
@@ -25,7 +25,9 @@
   <label class="md:w-1/2">
     <h3>知识库</h3>
     <select class="select" name="knowledge" value={assistant.knowledge}>
-      <option value="1797517354603782144">脆李知识库</option>
+      <option value = "">默认（无）</option>
+      <option value = {env.PUBLIC_KNOWLEDGE_CRISPPLUM}>脆李知识库</option>
+      <option value = {env.PUBLIC_KNOWLEDGE_ORANGE}>柑橘知识库</option>
     </select>
   </label>
   <label class="md:w-1/2">

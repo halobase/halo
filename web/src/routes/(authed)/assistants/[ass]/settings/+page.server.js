@@ -48,5 +48,14 @@ export const actions = {
 
     const [assistant, error] = await deserialize_response(res);
     return error ? fail(res.status, error) : assistant;
+  },
+  delete: async function (event){
+    const id = event.url.searchParams.get("id");
+    const res = await event.fetch(`/_api/assistants/`+id, {
+      method: "DELETE",
+    });
+
+    const [assistant, error] = await deserialize_response(res);
+    return error ? fail(res.status, error) : assistant;
   }
 };

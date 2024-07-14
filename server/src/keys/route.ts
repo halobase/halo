@@ -20,8 +20,9 @@ app.openapi($post, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
   console.log(init);
-  const lives = init.lives;
-  const scopes = init.scopes;
+  // const lives = init.lives;
+  // const authority = init.authority;
+  // const scopes = init.scopes;
   const prefix = "sk";
   const seed = crypto.randomUUID();
   const secret = hexify(await digest("sha-1", seed));
@@ -31,7 +32,7 @@ app.openapi($post, async (ctx) => {
   
   const [[key]] = await surreal.query<[Key]>(
     `begin;
-      let $keys = (create key content {lives: $init.lives, scopes: $init.scopes, prefix: $init.prefix, secret_truncated: $init.secret_truncated, secret: crypto::argon2::generate($init.secret)});
+      let $keys = (create key content {authority: $init.authority ,lives: $init.lives, scopes: $init.scopes, prefix: $init.prefix, secret_truncated: $init.secret_truncated, secret: crypto::argon2::generate($init.secret)});
       create k2t content {key: $keys[0].id, token: $token_surrealdb};
       return $keys;
      commit;
@@ -39,8 +40,6 @@ app.openapi($post, async (ctx) => {
     {
       init: {
         ...init,
-        lives,
-        scopes,
         prefix,
         secret,
         secret_truncated

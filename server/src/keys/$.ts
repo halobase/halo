@@ -16,7 +16,8 @@ export const $key_init = z
   .object({
     name: z.string().optional(),
     lives: z.number().optional(),
-    scopes: z.array(z.string()).optional()
+    scopes: z.array(z.string()).optional(),
+    authority:z.array(z.string()).optional()
   })
   .openapi("KeyInit");
 

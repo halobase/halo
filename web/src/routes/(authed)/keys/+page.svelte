@@ -1,14 +1,14 @@
 <script>
   import { Clipboard, Dialog, Form } from "$lib";
   import List from "./List.svelte";
-
   export let data;
-
+  /** @type {import("$lib/types").Service[]} */;
+  // console.log(data.services);
   $: keys = data.keys;
+  let services = data.services;
   let scopes = data.scopes;
   let enable = false;
   let created = "";
-
   function __toggle() {
     enable = !enable;
   }
@@ -71,6 +71,14 @@
     <label>
       <h3>最大使用次数（-1 表示不限次数）</h3>
       <input class="input" type="number" name="lives" value={-1} required />
+    </label>
+    <label>
+      <h3>申请服务</h3>
+      <select class="select" name="services" multiple value={services}>
+        {#each services as { id, schema }}
+          <option value={id}>{schema?.info?.title}</option>
+        {/each}
+      </select>
     </label>
     <div class="group">
       <h3>作用域</h3>

@@ -230,6 +230,8 @@ app.openapi($update, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
   const { id } = ctx.req.param();
+  console.log(init);
+  
   const [ass] = await surreal.update<Assistant>(id, init, auth.token);
   return ctx.json(ass);
 });

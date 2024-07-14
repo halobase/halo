@@ -12,6 +12,7 @@ import keys from "./keys/route";
 import services from "./services/route";
 import assistants from "./assistants/route";
 import files from "./files/route";
+import  serviceslog  from "./serviceslog/route";
 
 const version = "1.0.0";
 
@@ -86,11 +87,11 @@ app.use(
   }),
   stats()
 );
-
 app.route("/user", user);
 app.route("/keys", keys);
 app.route("/services", services);
 app.route("/assistants", assistants);
 app.route("/files", files);
+app.route("/stats", serviceslog);
 
 export default app;

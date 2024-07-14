@@ -124,14 +124,39 @@ app.openapi($list_nodes, async (ctx) => {
 app.all("/:id/fetch/*", async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.param();
-  const [nodes] = await surreal.query<Node[]>(
-    `select * from node where service = $id`,
+  const [nodes,service] = await surreal.query<Node[]>(
+    `select * from node where service = $id;
+    select value schema.info.description FROM $id
+    `,
     { id },
     auth.token
   );
   if (nodes.length <= 0) {
     return ctx.notFound();
   }
+  const name = service[0]
+  surreal.create("servicelog", {
+    purpose: "",
+    url: ctx.req.url,
+    method: ctx.req.method,
+    header: ctx.req.raw.headers,
+    user: auth?.user.id,
+    service_name: name,
+  });
+  
+  await surreal.query(
+    `
+    let $time = string::concat(<string> time::year(), '-', <string> time::month());
+    let $logs = select * from monthTotal where service = $id and time = $time;
+    if array::len($logs) ==0 {
+      create monthTotal set service = $id , service_name = $name, times=1
+    }
+    else {
+      update monthTotal set times+=1 where service = $id and time = $time;
+    };
+    `,
+    { name,id }
+  );
   const i = Math.floor(Math.random() * 10) % nodes.length;
   const node = nodes[i];
   const url = `${node.url}${/\/fetch.*/.exec(ctx.req.url)![0].slice(6)}`;

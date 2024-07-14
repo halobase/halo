@@ -29,7 +29,15 @@ export async function load(event) {
       "name": "API Keys",
       "icon": "🗝️",
       "group": ""
+    },
+    {
+      "id": "monitor",
+      "name": "后台监控",
+      "icon": "🕵️",
+      "group": ""
     }
   ];
-  return { slugs };
+  const filteredSlugs = user.level ? slugs : slugs.filter(slug => slug.id !== 'monitor');
+
+  return { slugs: filteredSlugs };
 }

@@ -20,6 +20,7 @@ type Options = {
 };
 
 export function auth(opts: Options): MiddlewareHandler {
+  
   if (!crypto.subtle || !crypto.subtle.importKey) {
     throw new Error(
       "auth: `crypto.subtle.importKey` is undefined in the environment."
@@ -76,14 +77,14 @@ export function auth(opts: Options): MiddlewareHandler {
 
 async function exchange(ctx: Context, key?: string) {
   if (!key) return "";
-
+  
   const slices = key.split("-");
   if (slices.length !== 3) {
     throw new HTTPException(401, {
       res: unauthorized(ctx, "Bad API Key")
     });
-  }
-
+  };
+  
   const [, [k2t]] = await surreal.query<[K2T]>(
     `
     begin;
@@ -92,7 +93,18 @@ async function exchange(ctx: Context, key?: string) {
         if $keys[0].lives > 0 {
             update $key_id set lives -= 1;
         } ;
-        return select key.scopes, token from k2t where key = $keys[0].id fetch key;
+        return select key.scopes,key.authority, token from k2t where key = $keys[0].id fetch key;
+    }
+          else {
+        return [
+      {
+        key: {
+          authority: [],
+          scopes: []
+        },
+        token: ''
+      }
+      ];
     };
     commit;
     `,
@@ -102,7 +114,27 @@ async function exchange(ctx: Context, key?: string) {
     }
   );
   // TODO: filter scopes via ctx
-  return k2t?.token;
+  console.log(k2t);
+  
+  if (k2t.token!=null){
+    const regex = /service:([A-Za-z0-9]+)/;
+    const match = ctx.req.url.match(regex);
+    console.log(match,k2t?.token);
+      // return k2t?.token;
+    if (!match) return k2t?.token;
+    else if(match && match[1] && k2t.key.authority.includes(match[1])) return k2t?.token;
+    else{
+      throw new HTTPException(401, {
+        res: unauthorized(ctx, "No permission for this service!")
+      });
+    }
+  }
+  // return k2t?.token;
+  else{
+    throw new HTTPException(401, {
+      res: unauthorized(ctx, "Bad API Key!")
+    });
+  }
 }
 
 function unauthorized(ctx: Context, message: string) {

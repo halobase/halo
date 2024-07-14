@@ -185,7 +185,7 @@ export const $update = createRoute({
 export const $delete = createRoute({
   method: "delete",
   path: "/{id}",
-  summary: "Delete an assistant",
+  summary: "删除助手",
   description: "Delete an assistant you have ownership or verfied access to.",
   operationId: "assistant-delete",
   tags: ["Assistant"],

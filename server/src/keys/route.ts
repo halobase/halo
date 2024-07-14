@@ -38,7 +38,7 @@ app.openapi($post, async (ctx) => {
     `,
     {
       init: {
-        // ...init,
+        ...init,
         lives,
         scopes,
         prefix,

@@ -5,8 +5,8 @@ type ID = string;
 type Base = {
   readonly id: ID;
   icon?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at?: Date;
+  updated_at?: Date;
   user?: string;
 };
 
@@ -60,13 +60,27 @@ export type Key = Base & {
   secret?: string;
   secret_truncated: string;
   key_onetime?: string;
+  authority:Array<string>;
+  purpose:string;
 };
 
 export type K2T = {
-  key: Pick<Key, "scopes">;
+  key: Pick<Key, "scopes"|"authority">;
   token: string;
 };
-
+export type Servicelog = Base & {
+  header: object;
+  method: string;
+  url: string;
+  purpose: string;
+  service_name: string;
+}
+export type MonthTotal = {
+  times: Number;
+  time: string;
+  service_name: string;
+  service: string;
+}
 export type LLM = {
   model: string;
   system_prompt: string;

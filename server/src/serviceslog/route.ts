@@ -30,6 +30,7 @@ app.get('/request/:start/:end',async (ctx) => {
 });
 app.get('/month/:month',async (ctx) =>{
   const {month} = ctx.req.param()
+  console.log(month);
   
   const [ , res] = await surreal.query(
     `

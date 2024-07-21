@@ -116,15 +116,16 @@ async function exchange(ctx: Context, key?: string) {
   // TODO: filter scopes via ctx
   
   if (k2t.token!=null){
-    const regex = /service:([A-Za-z0-9]+)/;
-    const match = ctx.req.url.match(regex);
-    if (!match) return k2t?.token;
-    else if(match && k2t.key.authority.includes(match[0])) return k2t?.token;
-    else{
-      throw new HTTPException(401, {
-        res: unauthorized(ctx, "No permission for this service!")
-      });
-    }
+    return k2t?.token
+    // const regex = /service:([A-Za-z0-9]+)/;
+    // const match = ctx.req.url.match(regex);
+    // if (!match ||!ctx.req.url.includes('fetch')) return k2t?.token;
+    // else if(match && k2t.key.authority.includes(match[0])) return k2t?.token;
+    // else{
+    //   throw new HTTPException(401, {
+    //     res: unauthorized(ctx, "No permission for this service!")
+    //   });
+    // }
   }
   // return k2t?.token;
   else{

@@ -16,6 +16,7 @@ export type User = BaseUnauthed & {
   email: string,
   level: string,
   balance: number,
+  scope: string
 };
 
 export type GrantType = "PP" | "OTP" | "AK";

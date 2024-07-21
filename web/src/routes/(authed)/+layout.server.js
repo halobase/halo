@@ -37,7 +37,7 @@ export async function load(event) {
       "group": ""
     }
   ];
-  const filteredSlugs = user.level ? slugs : slugs.filter(slug => slug.id !== 'monitor');
+  const filteredSlugs = user.scope==='admin' ? slugs : slugs.filter(slug => slug.id !== 'monitor');
 
   return { slugs: filteredSlugs };
 }

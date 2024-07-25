@@ -20,7 +20,7 @@ type Options = {
 };
 
 export function auth(opts: Options): MiddlewareHandler {
-  
+
   if (!crypto.subtle || !crypto.subtle.importKey) {
     throw new Error(
       "auth: `crypto.subtle.importKey` is undefined in the environment."
@@ -77,14 +77,14 @@ export function auth(opts: Options): MiddlewareHandler {
 
 async function exchange(ctx: Context, key?: string) {
   if (!key) return "";
-  
+
   const slices = key.split("-");
   if (slices.length !== 3) {
     throw new HTTPException(401, {
       res: unauthorized(ctx, "Bad API Key")
     });
   };
-  
+
   const [, [k2t]] = await surreal.query<[K2T]>(
     `
     begin;
@@ -114,8 +114,8 @@ async function exchange(ctx: Context, key?: string) {
     }
   );
   // TODO: filter scopes via ctx
-  
-  if (k2t.token!=null){
+
+  if (k2t.token != null) {
     return k2t?.token
     // const regex = /service:([A-Za-z0-9]+)/;
     // const match = ctx.req.url.match(regex);
@@ -128,14 +128,14 @@ async function exchange(ctx: Context, key?: string) {
     // }
   }
   // return k2t?.token;
-  else{
+  else {
     throw new HTTPException(401, {
       res: unauthorized(ctx, "Bad API Key!")
     });
   }
 }
 
-function unauthorized(ctx: Context, message: string) {
+export function unauthorized(ctx: Context, message: string) {
   return Response.json(
     {
       message

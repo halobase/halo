@@ -1,6 +1,8 @@
 import { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { SSEStreamingApi, streamSSE } from "hono/streaming";
+import { HTTPException } from "hono/http-exception";
+import { unauthorized } from "@lib/auth";
 import {
   ChatCompletionChunk,
   ChatCompletionMessageParam,
@@ -37,7 +39,7 @@ import type {
 
 const app = new OpenAPIHono({});
 
-const model = "glm-4";
+const model = "glm-4-air";
 
 function normalize(cs: MessageContent[]): string {
   let text = "";
@@ -69,7 +71,11 @@ app.openapi($query, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
   const { services: service_ids, knowledge, llm, options } = init;
-
+  if (llm.model.toLowerCase() !== "glm-4-air" && llm.model.toLowerCase() !== "glm-4-flash") {
+    throw new HTTPException(401, {
+      res: unauthorized(ctx, "Only Support glm-4-air and glm-4-flash")
+    });
+  }
   let tools: Array<ChatCompletionTool> | undefined;
 
   if (!options.retrieval && service_ids) {
@@ -231,7 +237,7 @@ app.openapi($update, async (ctx) => {
   const init = ctx.req.valid("json");
   const { id } = ctx.req.param();
   console.log(init);
-  
+
   const [ass] = await surreal.update<Assistant>(id, init, auth.token);
   return ctx.json(ass);
 });

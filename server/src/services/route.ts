@@ -124,7 +124,7 @@ app.openapi($list_nodes, async (ctx) => {
 app.all("/:id/fetch/*", async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.param();
-  const [nodes,service] = await surreal.query<Node[]>(
+  const [nodes, service] = await surreal.query<Node[]>(
     `select * from node where service = $id;
     select value schema.info.description FROM $id
     `,
@@ -143,7 +143,7 @@ app.all("/:id/fetch/*", async (ctx) => {
     user: auth?.user.id,
     service_name: name,
   });
-  
+
   await surreal.query(
     `
     let $time = string::concat(<string> time::year(), '-', <string> time::month());
@@ -155,7 +155,7 @@ app.all("/:id/fetch/*", async (ctx) => {
       update monthTotal set times+=1 where service = $id and time = $time;
     };
     `,
-    { name,id }
+    { name, id }
   );
   const i = Math.floor(Math.random() * 10) % nodes.length;
   const node = nodes[i];

@@ -32,12 +32,12 @@ export async function load(event) {
     },
     {
       "id": "monitor",
-      "name": "后台监控",
+      "name": "控制中心",
       "icon": "🕵️",
       "group": ""
     }
   ];
-  const filteredSlugs = user.scope==='admin' ? slugs : slugs.filter(slug => slug.id !== 'monitor');
+  const filteredSlugs = user.scope==='admin' ? slugs : slugs.filter(slug => slug.id !== 'monitor' && slug.id !== 'assistants');
 
   return { slugs: filteredSlugs };
 }

@@ -6,6 +6,8 @@
   import { __query } from "./store";
 
   export let data;
+  /** @type {import("$lib/types").User} */;
+  let user = data.user;
   const all = data.services;
   let services = all;
   let union = false;
@@ -33,7 +35,7 @@
 <div class="drawer drawer-r drawer-s-2xl">
   <input type="checkbox" id="services" />
   <main class="container container-xl">
-    <Header />
+    <Header {user}/>
     <!-- <QueryKeyword on:query={__query} /> -->
     <List {services} />
   </main>

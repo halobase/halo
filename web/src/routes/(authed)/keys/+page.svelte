@@ -2,22 +2,28 @@
   import { Clipboard, Dialog, Form } from "$lib";
   import List from "./List.svelte";
   export let data;
-  /** @type {import("$lib/types").Service[]} */;
-  // console.log(data.services);
+  
   $: keys = data.keys;
   let services = data.services;
-  let scopes = data.scopes;
+  let role = data.user?.scope;
+  let own_permissions = services.filter(service => data.user?.permission.includes(service.id));
   let enable = false;
   let created = "";
   function __toggle() {
     enable = !enable;
   }
-
   /** @param {CustomEvent<typeof keys[0]>} e  */
   function __create(e) {
     const key = e.detail;
     created = key.key_onetime ?? "";
     __toggle();
+  }
+
+  function getstate() {
+    // 这里可以添加逻辑来根据 role 返回不同的值
+    // 例如：
+    if (role=== 'admin') return '已通过';
+    if (role === 'user') return '未审批';
   }
 </script>
 
@@ -44,14 +50,16 @@
       </p>
     </div>
     <div>
+    </div>
+    <div>
       <button class="btn btn-alpha" type="button" on:click={__toggle}>
-        + 生成 API Key
+        + 申请 API Key
       </button>
     </div>
   </div>
   {#if created}
     <div class="card card-info p-4">
-      <p class="mb-1">生成成功!</p>
+      <p class="mb-1">生成成功，等待管理员审批API Key权限！</p>
       <p>
         请立刻保存新生成的 API key, 它不会再显示，如果丢失或泄露，则需重新生成。
       </p>
@@ -65,22 +73,38 @@
 <Dialog bind:enable title="生成 API Key">
   <Form action="?/create" on:success={__create}>
     <label>
-      <h3>名称</h3>
-      <input class="input" type="text" name="name" value="API Key" required />
+      <!-- <h3>用户名(或公司名称)</h3> -->
+      <input class="input" type="text" name="name" value="" required hidden/>
     </label>
     <label>
-      <h3>最大使用次数（-1 表示不限次数）</h3>
-      <input class="input" type="number" name="lives" value={-1} required />
+      <h3>目的（该key的用途）</h3>
+      <input class="input" type="text" name="purpose" value="API Key" required />
     </label>
     <label>
-      <h3>申请服务</h3>
-      <select class="select" name="services" multiple value={services}>
-        {#each services as { id, schema }}
-          <option value={id}>{schema?.info?.title}</option>
-        {/each}
-      </select>
+      <!-- <h3>最大使用次数（-1 表示不限次数）</h3> -->
+      <input class="input" type="number" name="lives" value={-1} hidden/>
     </label>
-    <div class="group">
+    <h3>选择服务</h3>
+    {#if own_permissions.length === 0}
+    <div class="text-center text-intro py-3">暂无可选服务，请申请服务权限。</div>
+    {/if}
+    <div  class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">    
+      {#each own_permissions as { id, schema }}
+      <label class="checkbox checkbox-alpha checkbox-sm">
+        <input
+          type="checkbox"
+          value={id}
+          name="permission"
+          checked
+        >
+        {schema?.info?.title}
+      </label>
+    {/each}
+    </div>
+    <label>
+      <input type="hidden" name="state" value={getstate()} />
+    </label>
+    <!-- <div class="group">
       <h3>作用域</h3>
       <div class="flex flex-wrap gap-4 mt-2">
         {#each scopes as scope}
@@ -90,7 +114,7 @@
           </label>
         {/each}
       </div>
-    </div>
+    </div> -->
     <svelte:fragment slot="submit">生成</svelte:fragment>
   </Form>
 </Dialog>

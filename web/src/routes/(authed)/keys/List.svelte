@@ -27,8 +27,8 @@
       <tr>
         <th class="w-10"></th>
         <th>Key</th>
-        <th>名称</th>
-        <th class="cell-md w-24">作用域</th>
+        <th>目的</th>
+        <!-- <th class="cell-md w-24">作用域</th> -->
         <th class="cell-lg">上次使用</th>
         <th class="w-10 sm:w-20"></th>
       </tr>
@@ -38,8 +38,8 @@
         <tr>
           <td class="pr-0">🗝️</td>
           <td>{format(key)}</td>
-          <td>{key.name}</td>
-          <td class="cell-md">{key.scopes.length}</td>
+          <td>{key.purpose}</td>
+          <!-- <td class="cell-md">{key.scopes.length}</td> -->
           <td class="cell-lg"
             >{key.accessed_at ? locale_datetime(key.accessed_at) : "-"}</td
           >
@@ -52,7 +52,7 @@
                 enable = true;
               }}
             >
-              <span class="sm:hidden">⨉</span>
+              <span class="sm:hidden">❌</span>
               <span class="hidden sm:block">撤销</span>
             </button>
           </td>

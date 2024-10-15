@@ -1,5 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { stats } from "@lib/stats";
+import { Stats } from "@lib/stats";
 import { auth } from "@lib/auth";
 import { $zen } from "./$";
 import { logger } from "hono/logger";
@@ -12,8 +12,9 @@ import keys from "./keys/route";
 import services from "./services/route";
 import assistants from "./assistants/route";
 import files from "./files/route";
-import  serviceslog  from "./serviceslog/route";
-
+import  stats  from "./stats/route";
+import  bill  from "./bill/route";
+import permission from "./permission/route"
 const version = "1.0.0";
 
 const app = new OpenAPIHono({
@@ -85,13 +86,14 @@ app.use(
     apikey: "x-api-key",
     secret: async (ctx) => env.TOKEN_SECRET!
   }),
-  stats()
+  Stats()
 );
 app.route("/user", user);
 app.route("/keys", keys);
 app.route("/services", services);
 app.route("/assistants", assistants);
 app.route("/files", files);
-app.route("/stats", serviceslog);
-
+app.route("/stats",stats);
+app.route("/bill",bill);
+app.route("/permission",permission );
 export default app;

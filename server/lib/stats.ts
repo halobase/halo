@@ -1,7 +1,7 @@
 import { MiddlewareHandler } from "hono";
 import { surreal } from "./surreal";
 
-export function stats(): MiddlewareHandler {
+export function Stats(): MiddlewareHandler {
   return async function (ctx, next) {
     const auth = ctx.get("auth");   
     try {

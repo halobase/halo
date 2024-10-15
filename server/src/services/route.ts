@@ -5,7 +5,7 @@ import {
   RequestBodyObject
 } from "openapi3-ts/oas30";
 import { surreal } from "@lib/surreal";
-import { Node, Service } from "@lib/types";
+import { Node, Service ,User} from "@lib/types";
 import {
   $list,
   $post as $create,
@@ -67,10 +67,11 @@ app.openapi($readme, async (ctx) => {
 app.openapi($create, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
-  const [service] = await surreal.create<Service>("service", init, auth.token);
+  const [service] = await surreal.create<Service>("service", init,auth.token);
   const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
   await surreal.update<Service>(service.id, { tools }, auth.token);
   service.tools = tools;
+  
   return ctx.json(service);
 });
 
@@ -124,9 +125,11 @@ app.openapi($list_nodes, async (ctx) => {
 app.all("/:id/fetch/*", async (ctx) => {
   const auth = ctx.get("auth");
   const { id } = ctx.req.param();
-  const [nodes, service] = await surreal.query<Node[]>(
+  const userId = auth.user.id;
+  const [nodes] = await surreal.query<Node[]>(
     `select * from node where service = $id;
-    select value schema.info.description FROM $id
+    select value schema.info.description FROM $id;
+    select * from service where id = $id
     `,
     { id },
     auth.token
@@ -134,7 +137,19 @@ app.all("/:id/fetch/*", async (ctx) => {
   if (nodes.length <= 0) {
     return ctx.notFound();
   }
-  const name = service[0]
+  const [names,services] = await surreal.query<Service[]>(
+    `
+    select value schema.info.description FROM $id;
+    select * from service where id = $id
+    `,
+    { id },
+    auth.token
+  );
+  const name = names[0]
+  const key = ctx.req.header("x-api-key")
+  const slices = key?.split("-");
+  const keyId = "key:"+slices?.[1]
+  const amount = services[0]?.unit_price
   surreal.create("servicelog", {
     purpose: "",
     url: ctx.req.url,
@@ -143,7 +158,22 @@ app.all("/:id/fetch/*", async (ctx) => {
     user: auth?.user.id,
     service_name: name,
   });
-
+  const [user] = await surreal.query<User[]>(
+    `select * from user where id = $userId;
+    UPDATE user SET balance -= $amount where id = $userId
+    `,
+    { userId, amount},
+    auth.token
+  );
+  surreal.create("bill", {
+    amount: amount,
+    service: name,
+    key:keyId,
+    user:auth.user.id,
+    secret_truncated: key?.slice(-4),
+    prefix: "sk",
+    balance: user[0].balance - amount
+  });
   await surreal.query(
     `
     let $time = string::concat(<string> time::year(), '-', <string> time::month());

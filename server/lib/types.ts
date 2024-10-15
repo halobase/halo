@@ -16,6 +16,9 @@ export type User = BaseUnauthed & {
   name: string;
   scope: "user" | "admin";
   level: number;
+  permission: Array<string>;
+  secret?: string;
+  balance: number;
 };
 
 export type Grant = GrantPP | GrantOTP;
@@ -36,12 +39,17 @@ export type Auth = {
   user: User;
   token: string;
 };
-
+export type Applylog = Base & {
+  service: Array<string>;
+  approve: Array<string>;
+  state: string;
+};
 export type Service = Base & {
   level?: number;
   readme?: string;
   schema?: object;
   tools?: Array<ChatCompletionTool>;
+  unit_price:number;
 };
 
 export type Node = Base & {
@@ -62,10 +70,11 @@ export type Key = Base & {
   key_onetime?: string;
   authority:Array<string>;
   purpose:string;
+  state:string;
 };
 
 export type K2T = {
-  key: Pick<Key, "scopes"|"authority">;
+  key: Pick<Key, "scopes"|"authority"|"state">;
   token: string;
 };
 export type Servicelog = Base & {
@@ -76,10 +85,17 @@ export type Servicelog = Base & {
   service_name: string;
 }
 export type MonthTotal = {
-  times: Number;
+  times: number;
   time: string;
   service_name: string;
   service: string;
+}
+export type Bill = Base & {
+  amount: number;
+  key: Pick<Key, "id"|"prefix"|"secret_truncated">;
+  service:  string;
+  user: string;
+  balance:number;
 }
 export type LLM = {
   model: string;

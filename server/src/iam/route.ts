@@ -50,6 +50,7 @@ async function grant_pp({ user, pass }: GrantPP): Promise<User> {
   let $users = (select id,level,secret from user where email = $email);
   if array::len($users) == 0 {
     return (create only user content {
+      name:  "用户"+type::string(rand::int(10000,99999)),
       email: $email,
       secret: crypto::argon2::generate($secret)
     } return id, level);

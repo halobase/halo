@@ -12,11 +12,12 @@ type Base = {
 type BaseUnauthed = Omit<Base, "user">;
 
 export type User = BaseUnauthed & {
-  name?: string,
+  name: string,
   email: string,
   level: string,
   balance: number,
-  scope: string
+  scope: string,
+  permission: Array<string>
 };
 
 export type GrantType = "PP" | "OTP" | "AK";
@@ -31,9 +32,19 @@ export type Doc = Base & {
   title: string,
   knowledge: string,
 };
+export type Applylog = Base & {
+  state:string,
+  service: string,
+  approve: string,
+};
 
-
-
+export type Bill = Base & {
+  amount: number;
+  key: Pick<Key, "id"|"prefix"|"secret_truncated">;
+  service:  string;
+  user: string;
+  balance:number;
+}
 export type Key = Base & {
   prefix: string,
   name: string,
@@ -41,8 +52,11 @@ export type Key = Base & {
   accessed_at?: string,
   expires_at?: string,
   secret?: string,
+  lives?: number,
   secret_truncated: string,
   key_onetime?: string,
+  purpose?:string,
+  state?:string,
 };
 
 export type OpenAPI = OpenAPIObject;
@@ -52,6 +66,7 @@ export type Service = Base & {
   current?: string,
   readme?: string,
   schema?: OpenAPI,
+  unit_price?:number,
 };
 
 export type Node = Base & {

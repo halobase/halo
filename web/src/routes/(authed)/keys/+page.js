@@ -7,7 +7,6 @@ export async function load(event) {
     .then(res => res.json()));
   keys.sort((a, b) => (new Date(a.created_at ?? 0)).getTime()
     - (new Date(b.created_at ?? 0)).getTime());
-
   const scopes = [
     "service.read",
     "service.write",

@@ -88,12 +88,9 @@ async function exchange(ctx: Context, key?: string) {
   const [, [k2t]] = await surreal.query<[K2T]>(
     `
     begin;
-    let $keys = select * from $key_id where crypto::argon2::compare(secret, $key_secret) and lives != 0;
+    let $keys = select * from $key_id where crypto::argon2::compare(secret, $key_secret);
     if array::len($keys) > 0 {
-        if $keys[0].lives > 0 {
-            update $key_id set lives -= 1;
-        } ;
-        return select key.scopes,key.authority, token from k2t where key = $keys[0].id fetch key;
+        return select key.scopes,key.authority,key.state, token from k2t where key = $keys[0].id fetch key;
     }
           else {
         return [
@@ -115,16 +112,29 @@ async function exchange(ctx: Context, key?: string) {
   );
   // TODO: filter scopes via ctx
 
-  if (k2t.token != null) {
-    return k2t?.token
-    // const regex = /service:([A-Za-z0-9]+)/;
-    // const match = ctx.req.url.match(regex);
-    // if (!match ||!ctx.req.url.includes('fetch')) return k2t?.token;
-    // else if(match && k2t.key.authority.includes(match[0])) return k2t?.token;
-    // else{
+  if (k2t.token) {
+        // return k2t?.token
+    console.log(k2t);
+    // if(k2t.key.state == "未审批"){
     //   throw new HTTPException(401, {
-    //     res: unauthorized(ctx, "No permission for this service!")
+    //     res: unauthorized(ctx, "This key has not been approved")
     //   });
+    // }
+    // else if(k2t.key.state == "未通过"){
+    //   throw new HTTPException(401, {
+    //     res: unauthorized(ctx, "Key permission not granted")
+    //   });
+    // }
+    // else{
+      const regex = /service:([A-Za-z0-9]+)/;
+      const match = ctx.req.url.match(regex);
+      if (!match ||!ctx.req.url.includes('fetch')) return k2t?.token;
+      else if(match && k2t.key.authority.includes(match[0])) return k2t?.token;
+      else{
+        throw new HTTPException(401, {
+          res: unauthorized(ctx, "No permission for this service!")
+        });
+      }
     // }
   }
   // return k2t?.token;

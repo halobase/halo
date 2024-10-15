@@ -15,7 +15,7 @@ export async function load(event) {
     {
       "id": "assistants",
       "name": "数字专家",
-      "icon": "🙂",
+      "icon": "🧑‍🔧",
       "group": ""
     },
     {
@@ -35,9 +35,28 @@ export async function load(event) {
       "name": "控制中心",
       "icon": "🕵️",
       "group": ""
+    },
+    {
+      "id": "users",
+      "name": "用户中心",
+      "icon": "🙂",
+      "group": ""
+    },
+    {
+      "id": "personal",
+      "name": "个人中心",
+      "icon": "🙂",
+      "group": ""
+    },
+    {
+      "id": "bills",
+      "name": "费用账单",
+      "icon": "💰",
+      "group": ""
     }
   ];
-  const filteredSlugs = user.scope==='admin' ? slugs : slugs.filter(slug => slug.id !== 'monitor' && slug.id !== 'assistants');
+  
+  const filteredSlugs = user.scope==='admin' ? slugs.filter(slug => slug.id !== 'personal') : slugs.filter(slug => slug.id !== 'monitor' && slug.id !== 'assistants' && slug.id !== 'users');
 
   return { slugs: filteredSlugs };
 }

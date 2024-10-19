@@ -7,6 +7,8 @@
   let services = data.services;
   let role = data.user?.scope;
   let own_permissions = services.filter(service => data.user?.permission.includes(service.id));
+  console.log(own_permissions);
+  
   let enable = false;
   let created = "";
   function __toggle() {
@@ -74,7 +76,7 @@
   <Form action="?/create" on:success={__create}>
     <label>
       <!-- <h3>用户名(或公司名称)</h3> -->
-      <input class="input" type="text" name="name" value="" required hidden/>
+      <input class="input" type="text" name="name" value=""  hidden/>
     </label>
     <label>
       <h3>目的（该key的用途）</h3>

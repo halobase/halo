@@ -9,8 +9,10 @@ export const actions = {
     const state= get(form, "state");
     const purpose = get(form, "purpose");
     const lives = +get(form, "lives");
-    const authority = form.getAll("services").map(v => v.toString());
+    const authority = form.getAll("permission").map(v => v.toString());
     const scopes = form.getAll("scope").map(v => v.toString());
+    console.log(authority);
+    
     const res = await event.fetch("/_api/keys", {
       method: "POST",
       headers: { "content-type": "application/json" },

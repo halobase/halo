@@ -50,7 +50,7 @@ export const $AssistantPathParam = z
   })
   .openapi("AssistantPathParam");
 
-export const $query = createRoute({
+export const  $query = createRoute({
   method: "post",
   path: "/query",
   summary: "Generate",

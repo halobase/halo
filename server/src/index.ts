@@ -78,8 +78,8 @@ app.openAPIRegistry.registerComponent("securitySchemes", "api_key", {
   in: "header"
 });
 
-app.route("/iam", iam);
 
+app.route("/iam", iam);
 app.use(
   "/*",
   auth({

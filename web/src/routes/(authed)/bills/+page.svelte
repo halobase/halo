@@ -10,7 +10,7 @@
   }
   </script>
 
-<div class="container container-lg lg:pt-8 2xl:pt-16">
+<div class="container container-xl ">
   <div class="flex flex-col justify-between gap-6 md:flex-row 2xl:mb-6">
   </div>
   <div class="card overflow-x-auto">
@@ -22,8 +22,8 @@
           <th class="cell-lg">账单id</th>
           <th >模型产品名</th>
           <th class="cell-lg">Key</th>
-          <th class="w-20">消费金额</th>
-          <th class="w-20">余额</th>
+          <th class="text-center cell-lg">消费金额</th>
+          <th class=" text-center cell-lg">余额</th>
         </tr>
       </thead>
       <tbody>
@@ -34,8 +34,8 @@
             <td class="cell-lg">{ bill.id.replace(/.*:/, "")}</td>
             <td>{bill.service}</td>
             <td class="cell-lg">{format(bill)}</td>
-            <td >{bill.amount}</td>
-            <td >{bill.balance}</td>
+            <td class="text-center cell-lg">{bill.amount}</td>
+            <td class="text-center cell-lg">{bill.balance}</td>
           </tr>
         {/each}
       </tbody>

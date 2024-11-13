@@ -20,6 +20,7 @@ type Options = {
 };
 
 export function auth(opts: Options): MiddlewareHandler {
+    
 
   if (!crypto.subtle || !crypto.subtle.importKey) {
     throw new Error(
@@ -40,7 +41,6 @@ export function auth(opts: Options): MiddlewareHandler {
         token = parts[1];
       }
     }
-
     if (!token && opts.cookie) {
       token = getCookie(ctx, opts.cookie);
     }
@@ -55,7 +55,8 @@ export function auth(opts: Options): MiddlewareHandler {
         res: unauthorized(ctx, "No credentials found in request")
       });
     }
-
+    console.log("token:",token);
+    
     const secret =
       typeof opts.secret === "string" ? opts.secret : await opts.secret(ctx);
 

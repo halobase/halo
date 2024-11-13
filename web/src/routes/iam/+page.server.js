@@ -30,5 +30,10 @@ export const actions = {
       path: "/",
     })
     return token;
-  }
+  },
+  // signout: async function (event) {
+  //   event.cookies.delete("hz-token",{
+  //     path: '/'
+  //   })
+  // },
 }

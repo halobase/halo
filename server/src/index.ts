@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import env from "@lib/env";
+import { stopCleanupInterval, triggerCleanupExpiredTasks } from "@lib/taskManager";
 import iam from "./iam/route";
 import user from "./user/route";
 import keys from "./keys/route";
@@ -15,6 +16,7 @@ import files from "./files/route";
 import  stats  from "./stats/route";
 import  bill  from "./bill/route";
 import permission from "./permission/route"
+import integration from "./integration/route";
 const version = "1.0.0";
 
 const app = new OpenAPIHono({
@@ -96,4 +98,21 @@ app.route("/files", files);
 app.route("/stats",stats);
 app.route("/bill",bill);
 app.route("/permission",permission );
+app.route("/integration",integration);
+// 应用启动时触发一次清理
+triggerCleanupExpiredTasks();
+
+// 处理应用关闭事件
+process.on('SIGINT', () => {
+  console.log('应用正在关闭...');
+  stopCleanupInterval();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('应用正在关闭...');
+  stopCleanupInterval();
+  process.exit(0);
+});
+
 export default app;

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
 
 // 任务过期时间配置（毫秒）
-const TASK_EXPIRATION_TIME = 60 * 60 * 1000; // 1小时
+const TASK_EXPIRATION_TIME = 60 * 60 * 1000 * 2; // 2小时
 
 // 任务状态枚举
 export enum TaskStatus {
@@ -92,7 +92,8 @@ export function createTask(type: string, data: any): Task {
     status: TaskStatus.PENDING,
     data,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
+    result:null
   };
   
   tasks.set(taskId, task);
@@ -125,9 +126,9 @@ export function updateTaskStatus(taskId: string, status: TaskStatus, result?: an
 
 // 获取任务结果路径
 export function getTaskResultPaths(task: Task): string[] {
-  if (task.type !== 'video-processing' || task.status !== TaskStatus.COMPLETED) {
-    return [];
-  }
+  // if (task.type !== 'video-processing' || task.status !== TaskStatus.COMPLETED) {
+  //   return [];
+  // }
   const data = task.data as VideoProcessingTaskData;
   const tempDir = getTempDir();
   const framesDir = path.join(tempDir, 'frames');
@@ -165,12 +166,6 @@ export function cleanupTask(taskId: string): void {
   }
 }
 
-// 执行视频处理任务的函数
-export async function processVideoTask(taskId: string): Promise<void> {
-  // 这个函数将在后台执行，不会阻塞API响应
-  // 实际实现将在route.ts中调用download和frameExtraction
-}
-
 // 获取所有任务
 export function getAllTasks(): Task[] {
   return Array.from(tasks.values());
@@ -187,4 +182,21 @@ export function stopCleanupInterval(): void {
     clearInterval(cleanupInterval);
     console.log('已停止任务过期清理定时器');
   }
+}
+
+// 添加任务结果数据（不改变任务状态，合并新字段到现有结果）
+export function updateTaskResult(taskId: string, result: any): Task | undefined {
+  const task = tasks.get(taskId);
+  if (!task) return undefined;
+  
+  // 如果已有结果且为对象，则合并新字段，否则直接赋值
+  if (task.result && typeof task.result === 'object' && !Array.isArray(task.result)) {
+    task.result = { ...task.result, ...result };
+  } else {
+    task.result = result;
+  }
+  
+  task.updatedAt = new Date();
+  
+  return task;
 }

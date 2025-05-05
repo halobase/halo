@@ -7,6 +7,7 @@ COPY tsconfig.json ./
 COPY src ./src
 COPY lib ./lib
 
+
 RUN bun i
 RUN bun run build
 

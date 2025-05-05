@@ -23,7 +23,7 @@ if (ffprobeStatic.path && fs.existsSync(ffprobeStatic.path)) {
 }
 
 interface ExtractFramesOptions {
-  filetime:string;
+  filetime: string;
   inputPath: string;
   outputDir: string;
   frameRate?: number;       // 均匀提取时的帧率
@@ -47,12 +47,12 @@ export async function extractFrames(options: ExtractFramesOptions): Promise<void
   if (!fs.existsSync(inputPath)) {
     throw new Error(`Input file not found: ${inputPath}`);
   }
-  
+
   // 创建输出目录（如果不存在）
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  
+
   // 验证目录可写性
   try {
     fs.accessSync(outputDir, fs.constants.W_OK);
@@ -125,10 +125,3 @@ function generateUniformRandomTimepoints(duration: number, count: number): numbe
 }
 
 export default extractFrames;
-// extractFrames({
-//   inputPath: 'D:\\project\\halo\\server\\temp\\48e61df544d9a3fe99c962852fafd200.mp4',
-//   outputDir: './temp/frames',
-//   extractMode: 'random',
-//   frameCount: 6,
-//   outputFormat: 'jpg'
-// }).catch(console.error);

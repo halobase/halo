@@ -13,8 +13,8 @@ import keys from "./keys/route";
 import services from "./services/route";
 import assistants from "./assistants/route";
 import files from "./files/route";
-import  stats  from "./stats/route";
-import  bill  from "./bill/route";
+import stats from "./stats/route";
+import bill from "./bill/route";
 import permission from "./permission/route"
 import integration from "./integration/route";
 const version = "1.0.0";
@@ -95,10 +95,10 @@ app.route("/keys", keys);
 app.route("/services", services);
 app.route("/assistants", assistants);
 app.route("/files", files);
-app.route("/stats",stats);
-app.route("/bill",bill);
-app.route("/permission",permission );
-app.route("/integration",integration);
+app.route("/stats", stats);
+app.route("/bill", bill);
+app.route("/permission", permission);
+app.route("/integration", integration);
 // 应用启动时触发一次清理
 triggerCleanupExpiredTasks();
 

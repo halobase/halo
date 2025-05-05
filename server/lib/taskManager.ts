@@ -50,14 +50,14 @@ function isTaskExpired(task: Task): boolean {
 export function cleanupExpiredTasks(): void {
   console.log('开始清理过期任务...');
   const expiredTaskIds: string[] = [];
-  
+
   // 找出所有过期的任务
   tasks.forEach((task, taskId) => {
     if (isTaskExpired(task)) {
       expiredTaskIds.push(taskId);
     }
   });
-  
+
   // 清理过期任务
   expiredTaskIds.forEach(taskId => {
     // 先清理任务相关资源
@@ -66,7 +66,7 @@ export function cleanupExpiredTasks(): void {
     tasks.delete(taskId);
     console.log(`已删除过期任务: ${taskId}`);
   });
-  
+
   console.log(`清理完成，共删除 ${expiredTaskIds.length} 个过期任务`);
 }
 
@@ -85,7 +85,7 @@ function getTempDir(): string {
 export function createTask(type: string, data: any): Task {
   const taskId = uuidv4();
   const now = new Date();
-  
+
   const task: Task = {
     id: taskId,
     type,
@@ -93,9 +93,9 @@ export function createTask(type: string, data: any): Task {
     data,
     createdAt: now,
     updatedAt: now,
-    result:null
+    result: null
   };
-  
+
   tasks.set(taskId, task);
   return task;
 }
@@ -109,18 +109,18 @@ export function getTask(taskId: string): Task | undefined {
 export function updateTaskStatus(taskId: string, status: TaskStatus, result?: any, error?: string): Task | undefined {
   const task = tasks.get(taskId);
   if (!task) return undefined;
-  
+
   task.status = status;
   task.updatedAt = new Date();
-  
+
   if (result !== undefined) {
     task.result = result;
   }
-  
+
   if (error !== undefined) {
     task.error = error;
   }
-  
+
   return task;
 }
 
@@ -132,13 +132,13 @@ export function getTaskResultPaths(task: Task): string[] {
   const data = task.data as VideoProcessingTaskData;
   const tempDir = getTempDir();
   const framesDir = path.join(tempDir, 'frames');
-  
+
   try {
     // 读取生成的帧文件
     const frameFiles = fs.readdirSync(framesDir)
       .filter(file => file.startsWith(data.filetime))
       .map(file => path.join(framesDir, file));
-    
+
     return frameFiles;
   } catch (error) {
     console.error('Error reading frame files:', error);
@@ -150,11 +150,11 @@ export function getTaskResultPaths(task: Task): string[] {
 export function cleanupTask(taskId: string): void {
   const task = tasks.get(taskId);
   if (!task || task.type !== 'video-processing') return;
-  
+
   const data = task.data as VideoProcessingTaskData;
   const tempDir = getTempDir();
   const videoPath = path.join(tempDir, data.fileName);
-  
+
   // 删除下载的视频文件
   try {
     if (fs.existsSync(videoPath)) {
@@ -188,15 +188,15 @@ export function stopCleanupInterval(): void {
 export function updateTaskResult(taskId: string, result: any): Task | undefined {
   const task = tasks.get(taskId);
   if (!task) return undefined;
-  
+
   // 如果已有结果且为对象，则合并新字段，否则直接赋值
   if (task.result && typeof task.result === 'object' && !Array.isArray(task.result)) {
     task.result = { ...task.result, ...result };
   } else {
     task.result = result;
   }
-  
+
   task.updatedAt = new Date();
-  
+
   return task;
 }

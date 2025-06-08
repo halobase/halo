@@ -6,7 +6,7 @@ import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import env from "@lib/env";
-import { stopCleanupInterval, triggerCleanupExpiredTasks } from "@lib/taskManager";
+import { stopCleanupInterval } from "@lib/taskManager";
 import iam from "./iam/route";
 import user from "./user/route";
 import keys from "./keys/route";
@@ -100,7 +100,6 @@ app.route("/bill", bill);
 app.route("/permission", permission);
 app.route("/integration", integration);
 // 应用启动时触发一次清理
-triggerCleanupExpiredTasks();
 
 // 处理应用关闭事件
 process.on('SIGINT', () => {

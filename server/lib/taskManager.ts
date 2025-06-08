@@ -6,19 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 // 任务过期时间配置（毫秒）
 const TASK_EXPIRATION_TIME = 60 * 60 * 1000 * 2; // 2小时
 
-// 任务状态枚举
-export enum TaskStatus {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed',
-  FAILED = 'failed'
-}
-
 // 任务类型
 export interface Task {
   id: string;
   type: string;
-  status: TaskStatus;
+  status: string;
   data: any;
   result?: any;
   error?: string;
@@ -71,7 +63,7 @@ export function cleanupExpiredTasks(): void {
 }
 
 // 启动定期清理任务
-const cleanupInterval = setInterval(cleanupExpiredTasks, 15 * 60 * 1000); // 每15分钟清理一次
+const cleanupInterval = setInterval(cleanupExpiredTasks, 120 * 60 * 1000); // 每15分钟清理一次
 
 // 获取临时目录路径
 function getTempDir(): string {
@@ -89,7 +81,7 @@ export function createTask(type: string, data: any): Task {
   const task: Task = {
     id: taskId,
     type,
-    status: TaskStatus.PENDING,
+    status: 'pending',
     data,
     createdAt: now,
     updatedAt: now,
@@ -106,7 +98,7 @@ export function getTask(taskId: string): Task | undefined {
 }
 
 // 更新任务状态
-export function updateTaskStatus(taskId: string, status: TaskStatus, result?: any, error?: string): Task | undefined {
+export function updateTaskStatus(taskId: string, status: string, result?: any, error?: string): Task | undefined {
   const task = tasks.get(taskId);
   if (!task) return undefined;
 
@@ -171,10 +163,6 @@ export function getAllTasks(): Task[] {
   return Array.from(tasks.values());
 }
 
-// 手动触发清理过期任务
-export function triggerCleanupExpiredTasks(): void {
-  cleanupExpiredTasks();
-}
 
 // 停止定时清理（在应用关闭时调用）
 export function stopCleanupInterval(): void {

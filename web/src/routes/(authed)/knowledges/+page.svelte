@@ -15,6 +15,7 @@
       <option value="https://jimoins.github.io/orange">沃柑</option>
       <option value="https://jimoins.github.io/strawberry">草莓</option>
       <option value="https://jimoins.github.io/rice">水稻</option>
+      <option value="https://jimoins.github.io/rice">云阳脐橙</option>
     </select>
   </label>
   <iframe class="w-full h-full" src={knowledge} title="g" frameborder="0"

@@ -110,7 +110,7 @@ async function processVideoTask(taskId: string, ctx: Context): Promise<void> {
       throw new Error("无法获取树势分析结果");
     }
     const phenologicalPeriod = currentTask.result.tree_analysis.phenological_period;
-    const validPeriods = ["休眠期", "萌动期", "露白期", "谢花期"];
+    const validPeriods = ["休眠期", "萌动期", "露白期", "初花期", "盛花期", "谢花期"];
 
     // 如果物候期不是指定的几种，则不进行后续处理
     if (phenologicalPeriod && !validPeriods.includes(phenologicalPeriod)) {
@@ -119,12 +119,12 @@ async function processVideoTask(taskId: string, ctx: Context): Promise<void> {
       updateTaskResult(taskId, {
         processing_status: `检测到物候期为${phenologicalPeriod}，不进行后续处理`,
       });
+      updateTaskStatus(taskId, "任务完成");
       return;
     }
 
     //三维重建    
     const obj_url = await treeReconstruction(data.video_url, ctx, taskId);
-    console.log(obj_url);
 
     canopyStructure(obj_url, ctx, taskId);
     light(obj_url, ctx, taskId);
@@ -151,7 +151,6 @@ const services_url = [
   }]
 const getMaxPhenophase = (result: Array<{ info: Array<{ [key: string]: string; 置信度: string }> }>) => {
   const fieldName = result[0]?.info[0]?.['物候期'] ? '物候期' : '树势评估';
-
   return Object.entries(
     result.flatMap(item => item.info).reduce((acc, info) => ({
       ...acc,
@@ -208,7 +207,8 @@ async function performTreeAnalysis(framePaths: string[], ctx: Context, taskId: s
       }
       if (service.name === "flower_quantity") {
         // 计算并添加花叶比和果叶比
-        const ratios = calculateFlowerLeafRatios(results);
+        const phenologicalPeriod = combinedResults.phenological_period;
+        const ratios = calculateFlowerLeafRatios(results, phenologicalPeriod);
         Object.assign(combinedResults, ratios);
       }
     }
@@ -216,7 +216,6 @@ async function performTreeAnalysis(framePaths: string[], ctx: Context, taskId: s
       tree_analysis: combinedResults
     });
     return;
-    // return combinedResults;
   } catch (error) {
     return null;
   }
@@ -249,7 +248,7 @@ async function treeReconstruction(videoUrl: string, ctx: Context, taskId: string
         }
       });
       console.log(result.data);
-      if (result.data.tree_Obj_download_url) {
+      if (result.data.status === 'complete_tree_completed') {
         updateTaskResult(taskId, {
           treeReconstruction: result.data
         });
@@ -343,7 +342,7 @@ export default app;
 
 
 // 计算花叶比和果叶比的函数
-function calculateFlowerLeafRatios(results: any[]) {
+function calculateFlowerLeafRatios(results: any[], phenologicalPeriod: string) {
   // 计算总计平均的花叶比和果叶比
   let totalFlower = 0;
   let totalLeaf = 0;
@@ -355,12 +354,24 @@ function calculateFlowerLeafRatios(results: any[]) {
     totalLeaf += result.leaf || 0;
     totalPlum += result.plum || 0;
   }
+  const flowerPeriods = ["露白期", "初花期", "盛花期", "谢花期"];
+  const leafPeriods = ["幼果期", "硬核期", "膨大期", "采收期", "采后期"];
+  const plumPeriods = ["膨大期", "采收期"];
 
-  // 计算比率
-  const ratios = {
-    flower_leaf_ratio: totalLeaf > 0 ? totalFlower / totalLeaf : 0,
-    plum_leaf_ratio: totalLeaf > 0 ? totalPlum / totalLeaf : 0
-  };
+  // 只在特定物候期返回相应的值
+  const ratios: { flower?: number, leaf?: number, plum?: number } = {};
+
+  if (flowerPeriods.includes(phenologicalPeriod)) {
+    ratios.flower = totalFlower;
+  }
+
+  if (leafPeriods.includes(phenologicalPeriod)) {
+    ratios.leaf = totalLeaf;
+  }
+
+  if (plumPeriods.includes(phenologicalPeriod)) {
+    ratios.plum = totalPlum;
+  }
 
   return ratios;
 }

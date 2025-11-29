@@ -142,12 +142,17 @@ const services_url = [
   }, {
     "name": "phenological_period",
     "service": "service:7dlqgjwrt10dnvffuyfk",//物候期
-    "endpoint": "predict_whq"
+    "endpoint": "phenology/predict"
   },
   {
     "name": "flower_quantity",
     "service": "service:ec1wkxtabt9lpgx5gwkr",//花数量
     "endpoint": "flower_detection/v2"
+  },
+  {
+    "name": "leaf_plum_ratio",
+    "service": "service:5xnpuw2pkcnvqv5f9uu5",//果叶比
+    "endpoint": "leaf_plum_ratio"
   }]
 const getMaxPhenophase = (result: Array<{ info: Array<{ [key: string]: string; 置信度: string }> }>) => {
   const fieldName = result[0]?.info[0]?.['物候期'] ? '物候期' : '树势评估';
@@ -170,6 +175,7 @@ async function performTreeAnalysis(framePaths: string[], ctx: Context, taskId: s
   const combinedResults = {
     phenological_period: "",
     tree_potential: "",
+    leaf_plum_ratio: 0,
   };
   try {
     for (const service of services_url) {
@@ -205,6 +211,13 @@ async function performTreeAnalysis(framePaths: string[], ctx: Context, taskId: s
       if (service.name === "tree_potential" || service.name === "phenological_period") {
         combinedResults[service.name] = getMaxPhenophase(results);
       }
+      if (service.name === "leaf_plum_ratio") {
+
+        // 计算果叶比的平均值
+        const sum = results.reduce((acc: any, curr: any) => acc + (curr.ratio || 0), 0);
+        // 避免除以0的情况
+        combinedResults.leaf_plum_ratio = results.length > 0 ? sum / results.length : 0;
+      }
       if (service.name === "flower_quantity") {
         // 计算并添加花叶比和果叶比
         const phenologicalPeriod = combinedResults.phenological_period;
@@ -224,6 +237,7 @@ async function treeReconstruction(videoUrl: string, ctx: Context, taskId: string
   updateTaskStatus(taskId, '三维重建中进度：0%');
   try {
     // 调用三维重建API
+    updateTaskStatus(taskId, '三维重建中进度：0%');
     const apiUrl1 = `${new URL(ctx.req.url).origin}/services/service:j60xz6fozzgoup2h0e5p/fetch/three_dimensional_reconstruction`;
     const response = await axios.post(apiUrl1, {
       video_url: videoUrl
@@ -233,7 +247,7 @@ async function treeReconstruction(videoUrl: string, ctx: Context, taskId: string
       }
     });
     const task_id = response.data.task_id;
-
+    console.log("三维重建:", task_id);
     // 轮询检查状态
     const apiUrl2 = `${new URL(ctx.req.url).origin}/services/service:j60xz6fozzgoup2h0e5p/fetch/three_dimensional_reconstruction/${task_id}/status`;
     let result;
@@ -279,9 +293,15 @@ async function light(obj_urls: string, ctx: Context, taskId: string): Promise<an
     updateTaskResult(taskId, {
       light: (await result).data
     });
-  } catch (error) {
+    updateTaskStatus(taskId, "光效分析完成");
+  } catch (error: any) {
     console.error('光效分析失败:', error);
-    throw error;
+    updateTaskStatus(taskId, "光效分析失败");
+    updateTaskResult(taskId, {
+      error: "光效分析失败",
+      details: error.message
+    });
+    return { error: "光效分析失败", details: error.message };
   }
 }
 
@@ -290,8 +310,8 @@ async function canopyStructure(obj_url: any, ctx: Context, taskId: string): Prom
   updateTaskStatus(taskId, '冠层结构分析中进度：0%');
   try {
     // 调用冠层结构分析API
-    // const apiUrl1 = `${new URL(ctx.req.url).origin}/services/service:09yb6hgxv9wvoe77ly9n/fetch/process_model`;
-    const apiUrl1 = `https://api.platform.archivemodel.cn/services/service:09yb6hgxv9wvoe77ly9n/fetch/process_model`;
+    const apiUrl1 = `${new URL(ctx.req.url).origin}/services/service:09yb6hgxv9wvoe77ly9n/fetch/process_model`;
+    // const apiUrl1 = `https://api.platform.archivemodel.cn/services/service:09yb6hgxv9wvoe77ly9n/fetch/process_model`;
     const response = await axios.post(apiUrl1, {
       obj_url
     }, {
@@ -303,12 +323,12 @@ async function canopyStructure(obj_url: any, ctx: Context, taskId: string): Prom
     console.log(task_id);
 
     // 轮询检查状态
-    // const apiUrl2 = `${new URL(ctx.req.url).origin}/services/service:09yb6hgxv9wvoe77ly9n/fetch/task_status/${task_id}`;
-    const apiUrl2 = `https://api.platform.archivemodel.cn/services/service:09yb6hgxv9wvoe77ly9n/fetch/task_status/${task_id}`;
+    const apiUrl2 = `${new URL(ctx.req.url).origin}/services/service:09yb6hgxv9wvoe77ly9n/fetch/task_status/${task_id}`;
+    // const apiUrl2 = `https://api.platform.archivemodel.cn/services/service:09yb6hgxv9wvoe77ly9n/fetch/task_status/${task_id}`;
     let result;
     let attempts = 0;
-    const maxAttempts = 100; // 最大尝试次数
-    const interval = 20000; // 20秒间隔
+    const maxAttempts = 100;
+    const interval = 20000;
 
     while (attempts < maxAttempts) {
       result = await axios.get(apiUrl2, {
@@ -332,9 +352,15 @@ async function canopyStructure(obj_url: any, ctx: Context, taskId: string): Prom
     if (attempts >= maxAttempts) {
       throw new Error('冠层结构分析超时');
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('冠层结构分析失败:', error);
-    throw error;
+    updateTaskStatus(taskId, "冠层结构分析失败");
+    updateTaskResult(taskId, {
+      error: "冠层结构分析失败",
+      details: error.message
+    });
+    // 返回错误信息而不是抛出异常
+    return { error: "冠层结构分析失败", details: error.message };
   }
 }
 

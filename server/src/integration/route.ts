@@ -139,7 +139,8 @@ const services_url = [
     "name": "tree_potential",
     "service": "service:zru08qjthy1u8x6gflkc",//树势
     "endpoint": "predict"
-  }, {
+  }, 
+  {
     "name": "phenological_period",
     "service": "service:7dlqgjwrt10dnvffuyfk",//物候期
     "endpoint": "phenology/predict"
@@ -153,21 +154,40 @@ const services_url = [
     "name": "leaf_plum_ratio",
     "service": "service:5xnpuw2pkcnvqv5f9uu5",//果叶比
     "endpoint": "leaf_plum_ratio"
-  }]
-const getMaxPhenophase = (result: Array<{ info: Array<{ [key: string]: string; 置信度: string }> }>) => {
-  const fieldName = result[0]?.info[0]?.['物候期'] ? '物候期' : '树势评估';
-  return Object.entries(
-    result.flatMap(item => item.info).reduce((acc, info) => ({
-      ...acc,
-      [info[fieldName]]: {
-        count: (acc[info[fieldName]]?.count || 0) + 1,
-        sum: (acc[info[fieldName]]?.sum || 0) + parseFloat(info['置信度'])
+  }
+]
+const getMaxPhenophase = (result: Array<any>) => {
+  if (!Array.isArray(result) || result.length === 0) return "";
+
+  const entries: Array<{ label: string; confidence: number }> = [];
+
+  for (const item of result) {
+    if (item && Array.isArray(item.info)) {
+      for (const info of item.info) {
+        const label = (info?.predicted_class ?? info?.['物候期'] ?? info?.['树势评估']) as string | undefined;
+        const confRaw = info?.confidence ?? info?.['置信度'];
+        const conf = typeof confRaw === 'number' ? confRaw : (typeof confRaw === 'string' ? parseFloat(confRaw) : 0);
+        if (label) entries.push({ label, confidence: isNaN(conf) ? 0 : conf });
       }
-    }), {} as Record<string, { count: number; sum: number }>)
-  ).sort((a, b) =>
-    b[1].count - a[1].count ||
-    b[1].sum - a[1].sum
-  )[0]?.[0];
+    } else {
+      const label = (item?.predicted_class ?? item?.['物候期'] ?? item?.['树势评估']) as string | undefined;
+      const confRaw = item?.confidence ?? item?.['置信度'];
+      const conf = typeof confRaw === 'number' ? confRaw : (typeof confRaw === 'string' ? parseFloat(confRaw) : 0);
+      if (label) entries.push({ label, confidence: isNaN(conf) ? 0 : conf });
+    }
+  }
+
+  if (entries.length === 0) return "";
+
+  const agg: Record<string, { count: number; sum: number }> = {};
+  for (const e of entries) {
+    if (!agg[e.label]) agg[e.label] = { count: 0, sum: 0 };
+    agg[e.label].count += 1;
+    agg[e.label].sum += e.confidence;
+  }
+
+  return Object.entries(agg)
+    .sort((a, b) => b[1].count - a[1].count || b[1].sum - a[1].sum)[0]?.[0] ?? "";
 }
 // 树势分析函数 - 调用外部API
 async function performTreeAnalysis(framePaths: string[], ctx: Context, taskId: string): Promise<any> {

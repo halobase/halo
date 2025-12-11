@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import axios from 'axios';
 import FormData from 'form-data';
 import * as path from 'path';
+import env from "@lib/env";
 
 const app = new Hono();
 
@@ -123,6 +124,9 @@ async function processVideoTask(taskId: string, ctx: Context): Promise<void> {
       return;
     }
 
+    await llmReturnResult(currentTask.result.tree_analysis.phenological_period, currentTask.result.tree_analysis.tree_potential, currentTask.result.tree_analysis.leaf_plum_ratio, taskId, ctx);
+
+
     //三维重建    
     const obj_url = await treeReconstruction(data.video_url, ctx, taskId);
 
@@ -138,12 +142,12 @@ const services_url = [
   {
     "name": "tree_potential",
     "service": "service:zru08qjthy1u8x6gflkc",//树势
-    "endpoint": "predict"
-  }, 
+    "endpoint": "predict/treevigor"
+  },
   {
     "name": "phenological_period",
     "service": "service:7dlqgjwrt10dnvffuyfk",//物候期
-    "endpoint": "phenology/predict"
+    "endpoint": "predict/phenology"
   },
   {
     "name": "flower_quantity",
@@ -161,19 +165,25 @@ const getMaxPhenophase = (result: Array<any>) => {
 
   const entries: Array<{ label: string; confidence: number }> = [];
 
+  const pushEntry = (label: any, confRaw: any) => {
+    if (!label) return;
+    const conf = typeof confRaw === 'number' ? confRaw : (typeof confRaw === 'string' ? parseFloat(confRaw) : 0);
+    entries.push({ label, confidence: isNaN(conf) ? 0 : conf });
+  };
+
   for (const item of result) {
-    if (item && Array.isArray(item.info)) {
-      for (const info of item.info) {
-        const label = (info?.predicted_class ?? info?.['物候期'] ?? info?.['树势评估']) as string | undefined;
-        const confRaw = info?.confidence ?? info?.['置信度'];
-        const conf = typeof confRaw === 'number' ? confRaw : (typeof confRaw === 'string' ? parseFloat(confRaw) : 0);
-        if (label) entries.push({ label, confidence: isNaN(conf) ? 0 : conf });
-      }
-    } else {
-      const label = (item?.predicted_class ?? item?.['物候期'] ?? item?.['树势评估']) as string | undefined;
-      const confRaw = item?.confidence ?? item?.['置信度'];
-      const conf = typeof confRaw === 'number' ? confRaw : (typeof confRaw === 'string' ? parseFloat(confRaw) : 0);
-      if (label) entries.push({ label, confidence: isNaN(conf) ? 0 : conf });
+    if (!item) continue;
+
+    // 新接口：直接返回 { phenophase, phenophase_confidence }
+    if (typeof item.phenophase === "string") {
+      pushEntry(item.phenophase, item.phenophase_confidence ?? item.confidence ?? item['置信度']);
+      continue;
+    }
+
+    // 树势接口：{ tree_vigor, tree_vigor_confidence }
+    if (typeof item.tree_vigor === "string") {
+      pushEntry(item.tree_vigor, item.tree_vigor_confidence ?? item.confidence ?? item['置信度']);
+      continue;
     }
   }
 
@@ -208,7 +218,6 @@ async function performTreeAnalysis(framePaths: string[], ctx: Context, taskId: s
             filename: path.basename(framePath),
             contentType: 'image/jpeg'
           });
-          form.append('user', 'user');
         }
         else {
           form.append('picture', fs.createReadStream(framePath), {
@@ -420,4 +429,103 @@ function calculateFlowerLeafRatios(results: any[], phenologicalPeriod: string) {
   }
 
   return ratios;
+}
+
+async function llmReturnResult(phenologicalPeriod: string, treePotential: string, LeafPlumRatio: number, taskId: string, ctx: Context) {
+
+  try {
+    const apiUrl = `${new URL(ctx.req.url).origin}/assistants/query`;
+    const prompt = `你是一位资深果树栽培专家，专注于脆李（Prunus salicina ‘Cuili’）的科学管理。请根据我提供的以下三项实时观测指标：
+1. 物候期：${phenologicalPeriod}
+2. 树势：${treePotential}
+3. 叶果比：${LeafPlumRatio}
+
+请完成以下分析与建议：
+
+📌 树体健康综合评估
+
+结合三项指标，判断当前树体营养分配是否合理，是否存在负载过重、营养失衡或生长衰弱风险；
+指出主要限制因子（如：叶果比偏低→光合供应不足；树势弱+花量大→易早衰等）。
+📌 分项农事指导建议（按优先级排序）
+
+疏花疏果：
+是否需要疏除？建议疏除时期、方法（疏花穗/疏幼果）、目标留果量或目标叶果比；
+均衡施肥：
+当前阶段推荐肥料类型（N-P-K配比）、施肥量（kg/株或亩）、施用方式（基肥/追肥/叶面喷施）；
+特别关注：是否需补钙防裂果、补钾促膨大、控氮防徒长等；
+修枝整形：
+是否需夏剪/冬剪？重点操作（如：疏除直立旺枝、回缩衰弱枝、拉枝开角等）；
+针对树势调整修剪强度（强树轻剪、弱树重剪促更新）；
+病虫害防治与防控：
+当前物候期高发病虫害（如：李实蜂、蚜虫、褐腐病、细菌性穿孔病等）；
+推荐绿色防控措施（物理/生物/低毒药剂），注明关键防治窗口期；
+针对树势弱的植株，提出增强抗性的辅助建议（如：喷施海藻素、氨基寡糖素等）。
+📌 风险预警与后续监测建议
+
+未来15–30天需重点关注的潜在问题（如：高温落果、水分胁迫、二次花芽分化异常等）；
+建议补充监测的指标（如：土壤墒情、新梢封顶率、果实横径日增量等）。`
+    // 流式获取大模型响应，避免一次性读入
+    const response = await axios.post(apiUrl, {
+      messages: [{ role: 'user', content: [{ type: 'text', text: prompt }] }],
+      services: [],
+      knowledge: env.CRISPPLUM_KNOWLEDGE_ID,
+      llm: { model: "glm-4-air", system_prompt: "回答中不要出现”根据文档“这些字。", temperature: 0.95, top_p: 0.7 },
+      options: { retrieval: true }
+    }, {
+      headers: {
+        'x-api-key': ctx.req.raw.headers.get('x-api-key')
+      },
+      responseType: 'stream'
+    });
+
+    // 解析流式 SSE（形如 "event: message" + "data: {...}"）
+    let buffer = "";
+    const assembled: { content: string[] } = { content: [] };
+
+    await new Promise<void>((resolve, reject) => {
+      response.data.on('data', (chunk: Buffer) => {
+        buffer += chunk.toString();
+        let idx: number;
+        // 按换行分割，逐行解析
+        while ((idx = buffer.indexOf("\n")) !== -1) {
+          const line = buffer.slice(0, idx).trim();
+          buffer = buffer.slice(idx + 1);
+          if (!line) continue;
+          // 只处理 data: 开头的行，忽略 event: 等
+          if (!line.startsWith("data:")) continue;
+          const jsonPart = line.slice("data:".length).trim();
+          if (!jsonPart) continue;
+          try {
+            const msg = JSON.parse(jsonPart);
+            // if (msg?.role) assembled.role = msg.role;
+            if (Array.isArray(msg?.content)) {
+              for (const c of msg.content) {
+                if (typeof c === "string") assembled.content.push(c);
+              }
+            } else if (typeof msg?.content === "string") {
+              assembled.content.push(msg.content);
+            }
+          } catch (e) {
+            // 丢弃无法解析的行，防止阻塞
+            console.error("LLM流解析失败行:", line, e);
+          }
+        }
+      });
+      response.data.on('end', () => resolve());
+      response.data.on('error', reject);
+    });
+
+    // 将流式片段拼接成完整字符串
+    const advisePayload = assembled.content.join("");
+
+    updateTaskResult(taskId, {
+      advise: advisePayload
+    });
+
+    console.log("LLM返回结果:", advisePayload);
+    return;
+  } catch (error: any) {
+    console.error('LLM结果获取失败:', error);
+    return null;
+  }
 }

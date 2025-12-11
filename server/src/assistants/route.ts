@@ -102,7 +102,8 @@ app.openapi($query, async (ctx) => {
       // @ts-ignore
       type: "retrieval",
       retrieval: {
-        knowledge_id: knowledge
+        knowledge_id: knowledge,
+        prompt_template: `在文档{{ knowledge }}中搜索问题{{question}}的答案。如果找到答案，仅使用文档中的陈述进行回应；如果没有找到答案，使用你自己的知识回答即可。 不要重复问题，直接开始答案。`
       }
     });
   }

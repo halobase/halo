@@ -5,7 +5,7 @@ import {
   RequestBodyObject
 } from "openapi3-ts/oas30";
 import { surreal } from "@lib/surreal";
-import { Node, Service ,User} from "@lib/types";
+import { Node, Service, User } from "@lib/types";
 import {
   $list,
   $post as $create,
@@ -67,11 +67,11 @@ app.openapi($readme, async (ctx) => {
 app.openapi($create, async (ctx) => {
   const auth = ctx.get("auth");
   const init = ctx.req.valid("json");
-  const [service] = await surreal.create<Service>("service", init,auth.token);
+  const [service] = await surreal.create<Service>("service", init, auth.token);
   const tools = flatten_openai_tools(service.id, init.schema as OpenAPIObject);
   await surreal.update<Service>(service.id, { tools }, auth.token);
   service.tools = tools;
-  
+
   return ctx.json(service);
 });
 
@@ -137,7 +137,7 @@ app.all("/:id/fetch/*", async (ctx) => {
   if (nodes.length <= 0) {
     return ctx.notFound();
   }
-  const [names,services] = await surreal.query<Service[]>(
+  const [names, services] = await surreal.query<Service[]>(
     `
     select value schema.info.description FROM $id;
     select * from service where id = $id
@@ -148,7 +148,7 @@ app.all("/:id/fetch/*", async (ctx) => {
   const name = names[0]
   const key = ctx.req.header("x-api-key")
   const slices = key?.split("-");
-  const keyId = "key:"+slices?.[1]
+  const keyId = "key:" + slices?.[1]
   const amount = services[0]?.unit_price
   surreal.create("servicelog", {
     purpose: "",
@@ -162,14 +162,14 @@ app.all("/:id/fetch/*", async (ctx) => {
     `select * from user where id = $userId;
     UPDATE user SET balance -= $amount where id = $userId
     `,
-    { userId, amount},
+    { userId, amount },
     auth.token
   );
   surreal.create("bill", {
     amount: amount,
     service: name,
-    key:keyId,
-    user:auth.user.id,
+    key: keyId,
+    user: auth.user.id,
     secret_truncated: key?.slice(-4),
     prefix: "sk",
     balance: user[0].balance - amount
@@ -191,10 +191,16 @@ app.all("/:id/fetch/*", async (ctx) => {
   const node = nodes[i];
   const url = `${node.url}${/\/fetch.*/.exec(ctx.req.url)![0].slice(6)}`;
   console.log("[halo-server] Fetching", url);
-  const ctype = ctx.req.raw.headers.get("content-type");
-  const headers = new Headers({
-    "content-type": ctype ?? "application/json",
-  });
+  // const ctype = ctx.req.raw.headers.get("content-type");
+  // const headers = new Headers({
+  //   "content-type": ctype ?? "application/json",
+  // });
+  const originalContentType = ctx.req.raw.headers.get("content-type"); // 获取 content-type
+
+  const headers = new Headers();
+  if (originalContentType) {
+    headers.set("content-type", originalContentType); // 仅当存在时才设置，保留完整信息（包括 boundary）
+  }
   return fetch(url, {
     method: ctx.req.raw.method,
     headers: headers,

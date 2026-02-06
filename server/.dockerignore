@@ -1,0 +1,17 @@
+# Node / Bun 依赖缓存（可选）
+node_modules
+bun.lockb
+
+# 构建输出（如果存在其他目录）
+build
+dist
+temp
+# 本地配置 / 日志
+.env
+*.log
+
+# IDE / 系统文件
+.vscode
+.idea
+.DS_Store
+*.swp

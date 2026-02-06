@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
 
 // 任务过期时间配置（毫秒）
-const TASK_EXPIRATION_TIME = 60 * 60 * 1000 * 2; // 2小时
+const TASK_EXPIRATION_TIME = 60 * 60 * 1000 * 12; // 2小时
 
 // 任务类型
 export interface Task {

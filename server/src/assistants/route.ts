@@ -144,10 +144,18 @@ app.openapi($query, async (ctx) => {
           tool_calls,
           knowledge
         );
+        await stream.writeSSE({
+          event: "message",
+          data: "[DONE]"
+        });
         return;
       }
       if (choice.finish_reason === "stop") {
         // TODO: stats
+        await stream.writeSSE({
+          event: "message",
+          data: "[DONE]"
+        });
         return;
       }
       await stream.writeSSE({
@@ -211,6 +219,10 @@ async function stream_tool_calls(
     const choice = chunk.choices[0];
     if (choice.finish_reason === "stop") {
       // TODO: stats
+      await stream.writeSSE({
+        event: "message",
+        data: "[DONE]"
+      });
       return;
     }
     await stream.writeSSE({

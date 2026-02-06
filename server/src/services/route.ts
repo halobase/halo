@@ -191,21 +191,37 @@ app.all("/:id/fetch/*", async (ctx) => {
   const node = nodes[i];
   const url = `${node.url}${/\/fetch.*/.exec(ctx.req.url)![0].slice(6)}`;
   console.log("[halo-server] Fetching", url);
-  // const ctype = ctx.req.raw.headers.get("content-type");
-  // const headers = new Headers({
-  //   "content-type": ctype ?? "application/json",
-  // });
-  const originalContentType = ctx.req.raw.headers.get("content-type"); // 获取 content-type
+  // const originalContentType = ctx.req.raw.headers.get("content-type"); // 获取 content-type
 
-  const headers = new Headers();
-  if (originalContentType) {
-    headers.set("content-type", originalContentType); // 仅当存在时才设置，保留完整信息（包括 boundary）
-  }
-  return fetch(url, {
-    method: ctx.req.raw.method,
-    headers: headers,
-    body: ctx.req.raw.body
+  // const headers = new Headers();
+  // if (originalContentType) {
+  //   headers.set("content-type", originalContentType); // 仅当存在时才设置，保留完整信息（包括 boundary）
+  // }
+  const ctype = ctx.req.raw.headers.get("content-type");
+  const headers = new Headers({
+    "content-type": ctype ?? "application/json",
   });
+  // return fetch(url, {
+  //   method: ctx.req.raw.method,
+  //   headers: headers,
+  //   body: ctx.req.raw.body
+  // });
+  //2
+  // const body = await ctx.req.arrayBuffer(); // 安全读取 body
+
+
+  // const headers = new Headers();
+  // if (originalContentType) {
+  //   headers.set("content-type", originalContentType); // 仅当存在时才设置，保留完整信息（包括 boundary）
+  // }
+    const proxyRequest = new Request(url, {
+      method: ctx.req.method,
+      headers,
+      body:ctx.req.raw.body,
+      duplex: "half",
+    }as RequestInit & { duplex: "half" });
+
+    return fetch(proxyRequest);
 });
 
 const allow_methods = ["get", "post", "delete", "put", "patch"];
